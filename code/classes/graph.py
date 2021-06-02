@@ -1,13 +1,13 @@
 import csv
 
-from . import Battery, House
+from . import Battery, House, Cable
 
 
 class Graph():
     def __init__(self, file_batteries, file_houses):
         self.battery = self.load_battery(file_batteries)
         self.house = self.load_house(file_houses)
-        self.cabel = cabel
+        self.cable = cable
         
     
     def load_battery(self, file_batteries):

@@ -1,4 +1,4 @@
-class Cabel():
+class Cable():
     def __init__(self, start, end):
         self.id = id
         self.start = start
