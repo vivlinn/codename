@@ -45,3 +45,10 @@ class Grid():
                 id += 1
 
         return houses
+
+
+    def get_height(self):
+        return self.height
+
+    def get_width(self):
+        return self.width
