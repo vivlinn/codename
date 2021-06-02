@@ -3,8 +3,10 @@ import csv
 from . import Battery, House, Cable
 
 
-class Graph():
+class Grid():
     def __init__(self, file_batteries, file_houses):
+        self.grid_width = 50
+        self.grid_height = 50
         self.battery = self.load_battery(file_batteries)
         self.house = self.load_house(file_houses)
         self.cable = cable
