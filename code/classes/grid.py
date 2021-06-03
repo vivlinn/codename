@@ -1,15 +1,17 @@
 import csv
 
-from . import Battery, House, Cable
+from .battery import Battery
+from .house import House
+from .cable import Cable
 
 
 class Grid():
     def __init__(self, file_batteries, file_houses):
         self.grid_width = 50
         self.grid_height = 50
-        self.battery = self.load_battery(file_batteries)
-        self.house = self.load_house(file_houses)
-        self.cable = cable
+        self.batteries = self.load_battery(file_batteries)
+        self.houses = self.load_houses(file_houses)
+        # self.cable = cable
         
     
     def load_battery(self, file_batteries):
@@ -24,9 +26,9 @@ class Grid():
             for row in reader:
                 positie = row['positie']
                 position_x_y = positie.split(",")
-                position_x = position_x_y[0]
-                position_y = position_x_y[1]
-                batteries[id] = Battery(position_x, position_y, row['capaciteit'])
+                position_x = int(position_x_y[0])
+                position_y = int(position_x_y[1])
+                batteries[id] = Battery(id, position_x, position_y, row['capaciteit'])
                 id += 1
 
         return batteries
@@ -41,14 +43,14 @@ class Grid():
 
             id = 0
             for row in reader:
-                houses[id] = House(row['x'], row['y'], row['maxoutput'])
+                houses[id] = House(id, float(row['maxoutput']), int(row['x']), int(row['y']))
                 id += 1
 
         return houses
 
 
     def get_height(self):
-        return self.height
+        return self.grid_height
 
     def get_width(self):
-        return self.width
+        return self.grid_width
