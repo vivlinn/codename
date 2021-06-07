@@ -2,7 +2,8 @@ import csv
 
 from .battery import Battery
 from .house import House
-from .cable import Cable
+from .route import Route
+
 
 
 class Grid():
@@ -44,9 +45,15 @@ class Grid():
             id = 0
             for row in reader:
                 houses[id] = House(id, float(row['maxoutput']), int(row['x']), int(row['y']))
+                
                 id += 1
 
+            
+        houses[0].route = Route(0, [34, 33, 32, 31, 30, 29, 28, 27, 26], [47, 47, 47, 47, 47, 47, 47, 47, 47])
         return houses
+
+    def load_cable(self):
+        pass
 
 
     def get_height(self):

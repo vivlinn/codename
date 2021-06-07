@@ -36,6 +36,18 @@ def visualise(grid, number):
         x_house.append(grid.houses[house].position_x)
         y_house.append(grid.houses[house].position_y)
 
+    
+    test = grid.houses[0]
+
+    x_route = test.route.list_x
+    y_route = test.route.list_y
+    ax.plot(x_route, y_route)
+            
+
+
+
+
+
     # for cable in grid.cables:
     #     plt.plot(cable.start, cable.end)
 
