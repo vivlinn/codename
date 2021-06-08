@@ -61,8 +61,6 @@ def random_cables(grid):
             
                     house.route.list_x.append(xtest)
 
-        house.route.list_x.append(battery.position_x)
-        house.route.list_y.append(battery.position_y)  
         print(house.route.list_x) 
         print(house.route.list_y)  
         print()      
