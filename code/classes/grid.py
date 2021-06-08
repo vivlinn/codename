@@ -8,8 +8,8 @@ from .route import Route
 
 class Grid():
     def __init__(self, file_batteries, file_houses):
-        self.grid_width = 10
-        self.grid_height = 10
+        self.grid_width = 5
+        self.grid_height = 5
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
         # self.cable = cable
@@ -19,7 +19,7 @@ class Grid():
         """
         Load all the batteries into the graph.
         """
-        batteries = {}
+        batteries = []
         with open(file_batteries, 'r') as in_file:
             reader = csv.DictReader(in_file)
 
@@ -29,7 +29,7 @@ class Grid():
                 position_x_y = positie.split(",")
                 position_x = int(position_x_y[0])
                 position_y = int(position_x_y[1])
-                batteries[id] = Battery(id, position_x, position_y, row['capaciteit'])
+                batteries.append(Battery(id, position_x, position_y, float(row['capaciteit'])))
                 id += 1
 
         return batteries
@@ -38,22 +38,20 @@ class Grid():
         """
         Load all the houses into the graph.
         """
-        houses = {}
+        houses = []
         with open(file_houses, 'r') as in_file:
             reader = csv.DictReader(in_file)
 
             id = 0
             for row in reader:
-                houses[id] = House(id, float(row['maxoutput']), int(row['x']), int(row['y']))
+                houses.append(House(id, float(row['maxoutput']), int(row['x']), int(row['y'])))
                 
                 id += 1
 
             
-        houses[0].route = Route(0, [34, 33, 32, 32, 32, 31, 31, 30, 29], [47, 47, 47, 46, 45, 45, 44, 44, 44])
+        # houses[0].route = Route(0, [34, 33, 32, 32, 32, 31, 31, 30, 29], [47, 47, 47, 46, 45, 45, 44, 44, 44])
         return houses
 
-    def load_cable(self):
-        pass
 
 
     def get_height(self):

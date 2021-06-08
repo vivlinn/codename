@@ -2,7 +2,6 @@ from sys import argv
 from code.classes import grid
 from code.visualisation import visualise
 from os import path
-
 from code.algorithms import random_cables
 
 
