@@ -16,7 +16,6 @@ def random_cables(grid):
         house.route = Route(battery, house.position_x, house.position_y)
 
         while not battery.position_x == house.route.list_x[-1] and not battery.position_y == house.route.list_y[-1]:
-            
 
             direction = random.choice(['x', 'y'])
 
@@ -24,9 +23,14 @@ def random_cables(grid):
                 direction_x = random.choice([-1, 1])
                 xtest = house.route.list_x[-1] + direction_x
                 
+                
                 if xtest >= 0 and xtest <= grid.grid_width:
+                    if len(house.route.list_x) > 1:
+                        previous = house.route.list_x[-2]
                     
-                    # print(house.route.list_x[-1])
+                        if previous == xtest:
+                            continue
+                    
                     house.route.list_x.append(xtest)
                     ytest = house.route.list_y[-1]
                     house.route.list_y.append(ytest)
@@ -36,6 +40,12 @@ def random_cables(grid):
                 ytest = house.route.list_y[-1] + direction_y
 
                 if ytest>= 0 and ytest <= grid.grid_height:
+                    if len(house.route.list_y) > 1:
+                        previous = house.route.list_y[-2]
+                    
+                        if previous == ytest:
+                            continue
+
                     house.route.list_y.append(ytest)
                     xtest = house.route.list_x[-1]
                     house.route.list_x.append(xtest)
