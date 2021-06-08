@@ -1,6 +1,7 @@
 from sys import argv
 from code.classes import grid
 from code.visualisation import visualise
+from code.visualisation import costs
 from os import path
 from code.algorithms import random_cables
 
@@ -24,5 +25,8 @@ if __name__ == "__main__":
     grid1 = grid.Grid(file_batteries, file_houses)
 
     random_cables.random_cables(grid1)
+
+    costs = costs.get_costs(grid1)
+    print(costs)
 
     visualise.visualise(grid1, argv[1])
