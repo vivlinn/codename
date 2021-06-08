@@ -10,6 +10,8 @@ def random_cables(grid):
         while True:
             battery = random.choice(grid.batteries)
             if battery.remaining >= house.max_output:
+
+                # update remaining battery capacity
                 battery.remaining = battery.remaining - house.max_output
                 break
 
@@ -22,17 +24,25 @@ def random_cables(grid):
             if direction == 'x':
                 direction_x = random.choice([-1, 1])
                 xtest = house.route.list_x[-1] + direction_x
+                ytest = house.route.list_y[-1]
                 
-                
+                # check if still inside grid
                 if xtest >= 0 and xtest <= grid.grid_width:
+
+                    # check if route has started
                     if len(house.route.list_x) > 1:
+                        # set previous cordinate as previous
                         previous = house.route.list_x[-2]
                     
+                        # check if new coordinate was not the previous coordinate
                         if previous == xtest:
+                            # choose new coordinate
                             continue
                     
+                    # append new coordinate to route list
                     house.route.list_x.append(xtest)
-                    ytest = house.route.list_y[-1]
+
+                    # append unchanged y coordinate to route list
                     house.route.list_y.append(ytest)
 
             else:
