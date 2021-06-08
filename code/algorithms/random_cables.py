@@ -10,6 +10,7 @@ def random_cables(grid):
         while True:
             battery = random.choice(grid.batteries)
             if battery.remaining >= house.max_output:
+                battery.remaining = battery.remaining - house.max_output
                 break
 
         house.route = Route(battery, house.position_x, house.position_y)
