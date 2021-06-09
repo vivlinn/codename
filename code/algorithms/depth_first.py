@@ -20,11 +20,13 @@ class DepthFirst:
         self.grid = copy.deepcopy(grid)
         self.batteries = grid.batteries
 
-        self.states = [copy.deepcopy(self.grid)]
+# Hier maken we een copy van de huizen
+        self.houses = [copy.deepcopy(self.grid.houses)]
 
         self.best_solution = None
         self.best_value = float('inf')
 
+# Dit zijn onze huizen
     def get_next_state(self):
         """
         Method that gets the next state from the list of states.
@@ -33,6 +35,7 @@ class DepthFirst:
         """
         return self.states.pop()
 
+# Hier gaat ie de route aanmaken
     def build_children(self, graph, node):
         """
         Creates all possible child-states and adds them to the list of states.
@@ -46,6 +49,7 @@ class DepthFirst:
             new_graph.nodes[node.id].set_value(value)
             self.states.append(new_graph)
 
+# Checken of de tweede kabellijn beter is dan de eerst kabellijn
     def check_solution(self, new_graph):
         """
         Checks and accepts better solutions than the current solution.
@@ -59,6 +63,7 @@ class DepthFirst:
             self.best_value = new_value
             print(f"New best value: {self.best_value}")
 
+# Alle mogelijke kabels legt die aan een voor een
     def run(self):
         """
         Runs the algorithm untill all possible states are visited.
