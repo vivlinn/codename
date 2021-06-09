@@ -5,17 +5,29 @@ import copy
 
 def random_cables(grid):
 
+    # loop through all houses in grid
     for house in grid.houses:
 
+        # loop till a battery is assigned to a house
         while True:
+            # assign random battery to the house
             battery_chosen = random.choice(grid.batteries)
+
+            # check if battery has capacity for the house
             if battery_chosen.remaining >= house.max_output:
 
                 # update remaining battery_chosen capacity
                 battery_chosen.remaining = battery_chosen.remaining - house.max_output
                 break
 
+        # add route object to the house
         house.route = Route(battery_chosen, house.position_x, house.position_y)
+
+        # save non-chosen batteries in list
+        other_batteries = []
+        for battery in grid.batteries:
+            if battery != battery_chosen:
+                other_batteries.append(battery) 
 
         while battery_chosen.position_x != house.route.list_x[-1] or battery_chosen.position_y != house.route.list_y[-1]:
 
@@ -39,17 +51,21 @@ def random_cables(grid):
                             # choose new coordinate
                             continue
 
-                    for battery in grid.batteries:
+                    valid = True
+                    # check if new coordinated don't lead to other batteries
+                    for battery in other_batteries:
                         
                         # bypass other batteries 
-                        if (xtest != battery.position_x or ytest != battery.position_y) and battery is battery_chosen:
+                        if xtest == battery.position_x or ytest == battery.position_y:
+                            valid = False
                     
-                            # append new coordinate to route list
-                            house.route.list_x.append(xtest)
+                    if valid == True:
+                        # append new coordinate to route list
+                        house.route.list_x.append(xtest)
 
-                            # append unchanged y coordinate to route list
-                            house.route.list_y.append(ytest)
-                            break
+                        # append unchanged y coordinate to route list
+                        house.route.list_y.append(ytest)
+
 
             else:
                 direction_y = random.choice([-1, 1])
@@ -68,17 +84,20 @@ def random_cables(grid):
                             # choose new coordinate
                             continue
 
-                    for battery in grid.batteries:
-
+                    valid = True
+                    # check if new coordinated don't lead to other batteries
+                    for battery in other_batteries:
+                        
                         # bypass other batteries 
-                        if ytest != battery.position_y or xtest != battery.position_x or battery is battery_chosen:
-                            
-                            # append new coordinate to route list
-                            house.route.list_y.append(ytest)
+                        if xtest == battery.position_x or ytest == battery.position_y:
+                            valid = False
+                    
+                    if valid == True:
+                        # append new coordinate to route list
+                        house.route.list_x.append(xtest)
 
-                            # append unchanged y coordinate to route list
-                            house.route.list_x.append(xtest)
-                            break
+                        # append unchanged y coordinate to route list
+                        house.route.list_y.append(ytest)
 
 
 
@@ -90,11 +109,6 @@ def random_cables(grid):
         print(house.route.list_x) 
         print(house.route.list_y)  
         print()      
-
-        # print()
-        # print(house.route.list_x)
-        # print(house.route.list_y)
-        # print()
 
 
 
