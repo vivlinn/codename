@@ -9,8 +9,8 @@ def visualise(grid, number):
     # https://stackoverflow.com/questions/24943991/change-grid-interval-and-specify-tick-labels-in-matplotlib
     fig, ax = plt.subplots()
 
-    major_ticks = np.arange(0, 6, 10)
-    minor_ticks = np.arange(0, 6, 1)
+    major_ticks = np.arange(0, 11, 10)
+    minor_ticks = np.arange(0, 11, 1)
     ax.set_xticks(major_ticks)
     ax.set_xticks(minor_ticks, minor=True)
     ax.set_yticks(major_ticks)
