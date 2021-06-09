@@ -8,6 +8,8 @@ import csv
 import pandas as pd
 
 
+ITERATIONS = 4
+
 if __name__ == "__main__":
     
     # check if command-line contains two arguments
@@ -26,15 +28,27 @@ if __name__ == "__main__":
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
     grid1 = grid.Grid(file_batteries, file_houses)
 
-    
+    total_costs = 0
+    counter = 0
+
     with open('doc/solutions.csv', 'w') as file:
         file.write("Cables\t\tBatteries\t\tTotal\t\t\n")
-        for _ in range(5):
+        for _ in range(ITERATIONS):
+            
+            print(counter)
+            counter += 1
+            
             random_cables.random_cables(grid1)
-            total_costs = costs.get_costs(grid1)
-            for key in total_costs.keys():
-                file.write("%i\t\t"%(total_costs[key]))
+            individual_costs = costs.get_costs(grid1)
+            for key in individual_costs.keys():
+                file.write("%i\t\t"%(individual_costs[key]))
             file.write("\n")
+            
+            total_costs += individual_costs['total']
+
+        average_costs = total_costs / ITERATIONS
+        file.write("Average costs: %i"%(average_costs))
+
 
     # costs = costs.get_costs(grid1)
     # print(costs)
