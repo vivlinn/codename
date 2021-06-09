@@ -5,7 +5,6 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 def visualise(grid, number):
     plt.grid(b=True, which='major', color='#666666', linestyle='-')
-
     
     # https://stackoverflow.com/questions/24943991/change-grid-interval-and-specify-tick-labels-in-matplotlib
     fig, ax = plt.subplots()
