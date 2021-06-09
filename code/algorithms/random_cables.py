@@ -56,7 +56,7 @@ def random_cables(grid):
                     for battery in other_batteries:
                         
                         # bypass other batteries 
-                        if xtest == battery.position_x or ytest == battery.position_y:
+                        if xtest == battery.position_x and ytest == battery.position_y:
                             valid = False
                     
                     if valid == True:
@@ -89,7 +89,7 @@ def random_cables(grid):
                     for battery in other_batteries:
                         
                         # bypass other batteries 
-                        if xtest == battery.position_x or ytest == battery.position_y:
+                        if xtest == battery.position_x and ytest == battery.position_y:
                             valid = False
                     
                     if valid == True:
