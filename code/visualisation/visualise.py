@@ -61,7 +61,7 @@ def visualise(grid, number):
     ax.plot(x_battery, y_battery, "bo")
 
     # save simple plot with x's and o's
-    plt.savefig(f"doc/district_{number}_simple.png")
+    plt.savefig(f"output/district_{number}_simple.png")
 
     # plot coordinates as house and battery images
      # image paths
@@ -75,7 +75,7 @@ def visualise(grid, number):
     plot_images(x_battery, y_battery, battery_image, ax=ax)
 
     # saves plot with pictures
-    plt.savefig(f"doc/district_{number}_image.png")
+    plt.savefig(f"output/district_{number}_image.png")
     plt.show()
 
 

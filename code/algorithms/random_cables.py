@@ -22,12 +22,14 @@ def random_cables(grid):
 
         # add route object to the house
         house.route = Route(battery_chosen, house.position_x, house.position_y)
+        battery_chosen.connected_houses.append(house)
 
         # save non-chosen batteries in list
         other_batteries = []
         for battery in grid.batteries:
             if battery != battery_chosen:
-                other_batteries.append(battery) 
+                other_batteries.append(battery)
+
 
         while battery_chosen.position_x != house.route.list_x[-1] or battery_chosen.position_y != house.route.list_y[-1]:
 

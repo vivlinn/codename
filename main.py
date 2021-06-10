@@ -6,9 +6,10 @@ from os import path
 from code.algorithms import random_cables
 import csv
 import pandas as pd
+import json
 
 
-ITERATIONS = 4
+ITERATIONS = 10
 
 if __name__ == "__main__":
     
@@ -26,20 +27,20 @@ if __name__ == "__main__":
     
     file_batteries = f"data/district_{number}/district-{number}_batteries.csv"
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
-    grid1 = grid.Grid(file_batteries, file_houses)
+    grid = grid.Grid(file_batteries, file_houses)
 
     total_costs = 0
     counter = 0
 
-    with open('doc/solutions.csv', 'w') as file:
+    with open('output/solutions.csv', 'w') as file:
         file.write("Cables\t\tBatteries\t\tTotal\t\t\n")
         for _ in range(ITERATIONS):
             
             print(counter)
             counter += 1
             
-            random_cables.random_cables(grid1)
-            individual_costs = costs.get_costs(grid1)
+            random_cables.random_cables(grid)
+            individual_costs = costs.get_costs(grid)
             for key in individual_costs.keys():
                 file.write("%i\t\t"%(individual_costs[key]))
             file.write("\n")
@@ -49,8 +50,28 @@ if __name__ == "__main__":
         average_costs = total_costs / ITERATIONS
         file.write("Average costs: %i"%(average_costs))
 
+    output = []
+    output.append({"district": argv[1], "costs-shared": total_costs})
+    counter = 1
+    for battery in grid.batteries:
+        output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
+        
+        for house in battery.connected_houses:
+            cables = []
+            for xi, yi in zip(house.route.list_x, house.route.list_y):
+                cables.append(f"{xi}, {yi}")
+            
+            output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
+
+    out_file = open("output/output.json", "w")
+    json.dump(output, out_file, indent = 6)    
+    out_file.close()
+
+    print(output[counter])
+
+
 
     # costs = costs.get_costs(grid1)
     # print(costs)
 
-    visualise.visualise(grid1, argv[1])
+    visualise.visualise(grid, argv[1])
