@@ -3,7 +3,7 @@ from code.classes import grid
 from code.visualisation import visualise
 from code.visualisation import costs
 from os import path
-from code.algorithms import random_cables
+from code.algorithms import random_cables, better_cables
 import csv
 import pandas as pd
 import json
@@ -29,49 +29,49 @@ if __name__ == "__main__":
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
     grid = grid.Grid(file_batteries, file_houses)
 
-    total_costs = 0
-    counter = 0
+    # total_costs = 0
+    # counter = 0
 
-    with open('output/solutions.csv', 'w') as file:
-        file.write("Cables\t\tBatteries\t\tTotal\t\t\n")
-        for _ in range(ITERATIONS):
+    # with open('output/solutions.csv', 'w') as file:
+    #     file.write("Cables\t\tBatteries\t\tTotal\t\t\n")
+    #     for _ in range(ITERATIONS):
             
-            print(counter)
-            counter += 1
+    #         print(counter)
+    #         counter += 1
             
-            random_cables.random_cables(grid)
-            individual_costs = costs.get_costs(grid)
-            for key in individual_costs.keys():
-                file.write("%i\t\t"%(individual_costs[key]))
-            file.write("\n")
+    #         random_cables.random_cables(grid)
+    #         individual_costs = costs.get_costs(grid)
+    #         for key in individual_costs.keys():
+    #             file.write("%i\t\t"%(individual_costs[key]))
+    #         file.write("\n")
             
-            total_costs += individual_costs['total']
+    #         total_costs += individual_costs['total']
 
-        average_costs = total_costs / ITERATIONS
-        file.write("Average costs: %i"%(average_costs))
+    #     average_costs = total_costs / ITERATIONS
+    #     file.write("Average costs: %i"%(average_costs))
 
-    output = []
-    output.append({"district": argv[1], "costs-shared": total_costs})
-    counter = 1
-    for battery in grid.batteries:
-        output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
+    # output = []
+    # output.append({"district": argv[1], "costs-shared": total_costs})
+    # counter = 1
+    # for battery in grid.batteries:
+    #     output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
         
-        for house in battery.connected_houses:
-            cables = []
-            for xi, yi in zip(house.route.list_x, house.route.list_y):
-                cables.append(f"{xi}, {yi}")
+    #     for house in battery.connected_houses:
+    #         cables = []
+    #         for xi, yi in zip(house.route.list_x, house.route.list_y):
+    #             cables.append(f"{xi}, {yi}")
             
-            output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
+    #         output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
 
-    out_file = open("output/output.json", "w")
-    json.dump(output, out_file, indent = 6)    
-    out_file.close()
+    # out_file = open("output/output.json", "w")
+    # json.dump(output, out_file, indent = 6)    
+    # out_file.close()
 
-    print(output[counter])
+    # print(output[counter])
 
-
+    better_cables.better_cables(grid)
 
     # costs = costs.get_costs(grid1)
     # print(costs)
 
-    visualise.visualise(grid, argv[1])
+    # visualise.visualise(grid, argv[1])
