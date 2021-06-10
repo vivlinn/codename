@@ -6,11 +6,9 @@ import copy
 def better_cables(grid):
 
     sorted_output = bubbleSort(grid.houses)
-    print(sorted_output)
 
     # loop through all houses in grid
     for house in sorted_output:
-        print(house.max_output)
         battery_chosen = None
         best = 101
         for battery in grid.batteries:
@@ -39,28 +37,28 @@ def better_cables(grid):
             # update remainig capacity of battery
             battery.remaining += house.max_output
 
-        print()
-        print("battery remaining: ")
-        print(battery.remaining)
-    
+    bubbleSort(houses_left)
+
     # go until no more houses left
     while len(houses_left) > 0:
         print()
         print(len(houses_left))
-        for house in houses_left:
-            print("max_output:")
-            print(house.max_output)
-            print("for house:")
-            print(house)
+        
 
-
-    # iterate over batteries
+        # iterate over batteries
         for battery in grid.batteries:
             print()
             print(battery.remaining)
+            
             # go till battery isn't too full
             for house in houses_left:
-                # if battery had enough capacity for this house
+                print()
+                print(house.max_output)
+
+
+            
+
+                # if battery has enough capacity for this house
                 if house.max_output <= battery.remaining:
                     # connect house to battery
                     battery.connected_houses.append(house)
@@ -68,6 +66,7 @@ def better_cables(grid):
                     battery.remaining -= house.max_output
                     # remove house from list
                     houses_left.remove(house)
+                    break
 
 # https://www.programiz.com/python-programming/methods/list/sort
 def bubbleSort(arr):
