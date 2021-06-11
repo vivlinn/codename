@@ -9,10 +9,9 @@ def better_cables(grid):
 
     # loop through all houses in grid
     for house in sorted_output:
-        battery_chosen = assign_battery(grid)
-            
-        battery_chosen.connected_houses.append(house)
-        battery_chosen.remaining -= house.max_output
+
+        # assign closest battery to house
+        assign_battery(grid)
 
     houses_left = []
 
@@ -63,7 +62,7 @@ def assign_battery(grid, house):
     """
     assigns a battery to a house with the least distance between them
     Input: grid class, house class
-    Returns: battery class
+    Returns: None
     """
     battery_chosen = None
 
@@ -73,8 +72,14 @@ def assign_battery(grid, house):
         if distance < best:
             best = distance
             battery_chosen = battery
+    
+    # append house to list of connected houses for battery            
+    battery_chosen.connected_houses.append(house)
 
-    return battery_chosen
+    # update remaining capacity for battery
+    battery_chosen.remaining -= house.max_output
+
+    return
 
 # https://www.programiz.com/python-programming/methods/list/sort
 def bubbleSort(arr):
