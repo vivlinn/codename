@@ -74,4 +74,4 @@ if __name__ == "__main__":
     # costs = costs.get_costs(grid1)
     # print(costs)
 
-    # visualise.visualise(grid, argv[1])
+    visualise.visualise(grid, argv[1])
