@@ -1,14 +1,13 @@
-import random
 from code.classes.route import Route
-import queue
-import copy
 
 def better_cables(grid):
     """
     This function tries to assign the closest battery for every house.
     It then checks if battery capacity is not exceeded, else assigns another battery to the house.
     Then adds all route coordinates to a route class for every house
-    Input: grid class
+    
+    grid: Grid class
+
     Returns: None
     """
 
@@ -27,45 +26,40 @@ def better_cables(grid):
             
         # if battery is full
         while battery.remaining < 0:
+
             # remove last house
-            house = battery.connected_houses.pop()
+            house = battery.remove_house()
+
             # update houses left
             houses_left.append(house)
+
             house.check = True
+
             # update remainig capacity of battery
-            battery.remaining += house.max_output
+            battery.update_remaining(house, "add")
 
     bubbleSort(houses_left, "house")
     sorted_batteries = bubbleSort(grid.batteries, "battery")
 
-
     # go until no more houses left
     while len(houses_left) > 0:
-        print("lengte list: ")
-        print(len(houses_left))
-        
 
-       
-            
-        # go till battery isn't too full
+       # go till battery isn't too full
         for house in houses_left:
-            print("output van het huis: ")
-            print(house.max_output)
-
+        
              # iterate over batteries
             for battery in sorted_batteries:
-                print("remaining van de batterij: ")
-                print(battery.remaining)
-
-            
 
                 # if battery has enough capacity for this house
                 if house.max_output <= battery.remaining:
+                    
                     # connect house to battery
                     house.route = Route(battery, house.position_x, house.position_y)
-                    battery.connected_houses.append(house)
+                    battery.add_house(house)
+                    
                     # update remaining capacity
-                    battery.remaining -= house.max_output
+                    battery.update_remaining(house, "subtract")
+                   
                     # remove house from list
                     houses_left.remove(house)
                     break
@@ -80,20 +74,22 @@ def better_cables(grid):
 def define_direction(house):
     """
     Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
-    Input: house class
-    Returns: horizontal int, vertical int
+    
+    house: House class
+
+    Returns: horizontal: int, vertical: int
     """
+    # if house is further on x-axis than battery: decrease x-coordinate
     if house.route.list_x[-1] >= house.route.battery.position_x:
-        print("x xoordinaat van huis om horizontal te bepalen")
-        print(house.route.list_x[-1])
-        print("x coordinaat van battery")
-        print(house.route.battery.position_x)
         horizontal = - 1
+    # else increase x-coordinate
     else:
         horizontal = 1
 
+    # if house is further on y-axis than battery: decrease y-coordinate
     if house.route.list_y[-1] > house.route.battery.position_y:
         vertical = -1
+    # else increase y-coordinate
     else:
         vertical = 1
 
@@ -103,25 +99,42 @@ def define_direction(house):
 def assign_battery(grid, house):
     """
     assigns a battery to a house with the least distance between them
-    Input: grid class, house class
+
+    grid: Grid class;
+    house: House class
+
     Returns: None
     """
+
+    # initiate variable to save coupled battery
     battery_chosen = None
 
+    # save shortest distance in best, start with longest possible
     best = grid.grid_height + grid.grid_width + 2
+
+    # loop through batteries
     for battery in grid.batteries:
+
+        # calculate distance between x-coordinates + distance between y-coordinates from house to battery
         distance = abs(battery.position_x - house.position_x) + abs(battery.position_y - house.position_y)
+
+        # if this is shorter than for last battery:
         if distance < best:
+
+            # update best to shorter distance
             best = distance
+
+            # set this battery as coupled battery
             battery_chosen = battery
     
-    # add battery to Route
+    # Create Route class for house/battery couple
     house.route = Route(battery_chosen, house.position_x, house.position_y)
+
     # append house to list of connected houses for battery       
-    battery_chosen.connected_houses.append(house)
+    battery_chosen.add_house(house)
 
     # update remaining capacity for battery
-    battery_chosen.remaining -= house.max_output
+    battery_chosen.update_remaining(house, "subtract")
 
     return
 
@@ -129,9 +142,12 @@ def assign_battery(grid, house):
 def bubbleSort(arr, object):
     """
     sorts a list using bubble sort
-    Input: list
+
+    arr: list
+
     Returns: list
     """
+
     n = len(arr)
 
     # Traverse through all array elements
@@ -149,30 +165,54 @@ def bubbleSort(arr, object):
                     arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
     return arr
-
-        
+    
 
 def lay_cables(grid, house, horizontal, vertical):
     """
-    lays cables from house to battery and adds them to route.list
-    Input: grid class, house class, horizontal integer, vertical integer
-    returns: none
+    Lays cables from house to battery and adds the coordinates to route class.
+    Starts by going horizontal, then vertical until battery is reached.
+
+    grid: Grid class; 
+    house: House class; 
+    horizontal: int; 
+    vertical: int
+
+    Returns: None
     """
+
+    # save non-chosen batteries in list
+    other_batteries = []
+    for battery in grid.batteries:
+        if battery != house.route.battery:
+            other_batteries.append(battery)
+
+    # loop till x-coordinate of cable matches x-coordinate of battery
     while house.route.list_x[-1] != house.route.battery.position_x:
 
+        # when house is not coupled to closest battery
         if house.check == True:
             axis = "x"
-            bypass_battery(grid, house, house.route.list_x[-1] + horizontal, house.route.list_y[-1], horizontal, vertical, axis)
+
+            # check if path doesn't cross other batteries
+            bypass_battery(house, horizontal, vertical, axis, other_batteries)
+
+            # re-calculate direction from path to battery
             horizontal, vertical = define_direction(house)
         else:
             house.route.list_x.append(house.route.list_x[-1] + horizontal)
             house.route.list_y.append(house.route.list_y[-1])
 
+    # loop till y-coordinate of cable matches y-coordinate of battery
     while house.route.list_y[-1] != house.route.battery.position_y:
         
+        # when house is not coupled to closest battery
         if house.check == True:
             axis = "y"
-            bypass_battery(grid, house, house.route.list_y[-1] + vertical, house.route.list_x[-1], horizontal, vertical, axis)
+
+            # check if path doesn't cross other batteries
+            bypass_battery(house, horizontal, vertical, axis, other_batteries)
+
+            # re-calculate direction from path to battery
             horizontal, vertical = define_direction(house)
         else:
             house.route.list_y.append(house.route.list_y[-1] + vertical)
@@ -180,45 +220,58 @@ def lay_cables(grid, house, horizontal, vertical):
 
     return
 
-def bypass_battery(grid, house, x, y, horizontal, vertical, axis):
+def bypass_battery(house, horizontal, vertical, axis, other_batteries):
     """
     bypasses battery if house is relocated and needed
-    Input: grid class, house class, x integer, y integer, direction integer, axis string
-    returns: none
+
+    grid: Grid class; 
+    house: House class; 
+    x: int;
+    y: int;
+    horizontal: int; 
+    vertical: int;
+    axis: string
+
+    returns: None
     """
-    # save non-chosen batteries in list
-    other_batteries = []
-    for battery in grid.batteries:
-        if battery != house.route.battery:
-            other_batteries.append(battery)
+    x = house.route.list_x[-1]
+    y = house.route.list_x[-1]
     
     # check if new coordinated don't lead to other batteries
     for battery in other_batteries:
-        # bypass other batteries 
-        if x == battery.position_x and y == battery.position_y:
-            # bewegen over de x-as
-            if axis == "x":
-                # één naar vertical (boven of beneden) en één naar horizontal (links of rechts)
-                house.route.list_y.extend([house.route.list_y[-1] + vertical, house.route.list_y[-1] + vertical])
-                house.route.list_x.extend([house.route.list_x[-1], house.route.list_x[-1] + horizontal])
             
-            # bewegen over de y-as
-            else:
-                # één naar horizontal (links of rechts) en één naar vertical (boven of beneden)
-                # x-as down
-                house.route.list_x.extend([house.route.list_x[-1] + horizontal, house.route.list_x[-1] + horizontal])
-                # y-as
-                house.route.list_y.extend([house.route.list_y[-1], house.route.list_y[-1] + vertical])
-            return
+        # if path is moving across the x-axis
+        if axis == "x":
+
+            # bypass other batteries 
+            if x + horizontal == battery.position_x and y == battery.position_y:
+
+                # Move one y-coordinate up or down, then one x coordinate left or right depending on direction towards right battery
+                house.route.list_y.extend([y + vertical, y + vertical])
+                house.route.list_x.extend([x, x + horizontal])
+            
+        # bewegen over de y-as
+        else:
+
+            # bypass other batteries 
+            if x == battery.position_x and y + vertical == battery.position_y:
+
+                # Move one x coordinate left or right, then one y-coordinate up or down depending on direction towards right battery
+                house.route.list_x.extend([x + horizontal, x + horizontal])
+                house.route.list_y.extend([y, y + vertical])
+
+        return
 
     # append if bypasses is not needed
-    # changes x coordinate
     if axis == "x":
-        house.route.list_x.append(house.route.list_x[-1] + horizontal)
-        house.route.list_y.append(house.route.list_y[-1])
-    # changes y coordinate
+
+        # changes x coordinate
+        house.route.list_x.append(x + horizontal)
+        house.route.list_y.append(y)
     else:
-        house.route.list_y.append(house.route.list_y[-1] + vertical)
-        house.route.list_x.append(house.route.list_x[-1])
+
+        # changes y coordinate
+        house.route.list_x.append(x)
+        house.route.list_y.append(y + vertical)
 
     return
