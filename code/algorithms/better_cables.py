@@ -12,7 +12,7 @@ def better_cables(grid):
     Returns: None
     """
 
-    sorted_output = bubbleSort(grid.houses)
+    sorted_output = bubbleSort(grid.houses, "house")
 
     # loop through all houses in grid
     for house in sorted_output:
@@ -35,24 +35,27 @@ def better_cables(grid):
             # update remainig capacity of battery
             battery.remaining += house.max_output
 
-    bubbleSort(houses_left)
+    bubbleSort(houses_left, "house")
+    sorted_batteries = bubbleSort(grid.batteries, "battery")
+
 
     # go until no more houses left
     while len(houses_left) > 0:
-        print()
+        print("lengte list: ")
         print(len(houses_left))
         
 
-        # iterate over batteries
-        for battery in grid.batteries:
-            print()
-            print(battery.remaining)
+       
             
-            # go till battery isn't too full
-            for house in houses_left:
-                print()
-                print(house.max_output)
+        # go till battery isn't too full
+        for house in houses_left:
+            print("output van het huis: ")
+            print(house.max_output)
 
+             # iterate over batteries
+            for battery in sorted_batteries:
+                print("remaining van de batterij: ")
+                print(battery.remaining)
 
             
 
@@ -123,7 +126,7 @@ def assign_battery(grid, house):
     return
 
 # https://www.programiz.com/python-programming/methods/list/sort
-def bubbleSort(arr):
+def bubbleSort(arr, object):
     """
     sorts a list using bubble sort
     Input: list
@@ -138,8 +141,12 @@ def bubbleSort(arr):
         for j in range(0, n-i-1):
 
             # Swap if the element found is greater
-            if arr[j].max_output < arr[j + 1].max_output :
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+            if object == "house":
+                if arr[j].max_output < arr[j + 1].max_output :
+                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
+            else:
+                if arr[j].remaining > arr[j + 1].remaining :
+                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
     return arr
 
@@ -152,10 +159,6 @@ def lay_cables(grid, house, horizontal, vertical):
     returns: none
     """
     while house.route.list_x[-1] != house.route.battery.position_x:
-        print("laatste van lijst: ")
-        print(house.route.list_x[-1])
-        print("batterij x: ")
-        print(house.route.battery.position_x)
 
         if house.check == True:
             axis = "x"
