@@ -85,7 +85,7 @@ def define_direction(house):
         print(house.route.list_x[-1])
         print("x coordinaat van battery")
         print(house.route.battery.position_x)
-        horizontal = -1
+        horizontal = - 1
     else:
         horizontal = 1
 
@@ -159,7 +159,7 @@ def lay_cables(grid, house, horizontal, vertical):
 
         if house.check == True:
             axis = "x"
-            bypass_battery(grid, house, house.route.list_x[-1] + horizontal, house.route.list_y[-1],vertical, horizontal, axis)
+            bypass_battery(grid, house, house.route.list_x[-1] + horizontal, house.route.list_y[-1], horizontal, vertical, axis)
             horizontal, vertical = define_direction(house)
         else:
             house.route.list_x.append(house.route.list_x[-1] + horizontal)
@@ -169,7 +169,7 @@ def lay_cables(grid, house, horizontal, vertical):
         
         if house.check == True:
             axis = "y"
-            bypass_battery(grid, house, house.route.list_y[-1] + vertical, house.route.list_x[-1], vertical, horizontal, axis)
+            bypass_battery(grid, house, house.route.list_y[-1] + vertical, house.route.list_x[-1], horizontal, vertical, axis)
             horizontal, vertical = define_direction(house)
         else:
             house.route.list_y.append(house.route.list_y[-1] + vertical)
@@ -195,7 +195,6 @@ def bypass_battery(grid, house, x, y, horizontal, vertical, axis):
         if x == battery.position_x and y == battery.position_y:
             # bewegen over de x-as
             if axis == "x":
-                
                 # één naar vertical (boven of beneden) en één naar horizontal (links of rechts)
                 house.route.list_y.extend([house.route.list_y[-1] + vertical, house.route.list_y[-1] + vertical])
                 house.route.list_x.extend([house.route.list_x[-1], house.route.list_x[-1] + horizontal])
@@ -212,15 +211,6 @@ def bypass_battery(grid, house, x, y, horizontal, vertical, axis):
     # append if bypasses is not needed
     # changes x coordinate
     if axis == "x":
-        print("laatste coordinaat x: ")
-        print(house.route.list_x[-1])
-        print("direction:")
-        print(horizontal, vertical)
-        print("batterij x:")
-        print(battery.position_x)
-        print("house")
-        print(house.position_x)
-        print()
         house.route.list_x.append(house.route.list_x[-1] + horizontal)
         house.route.list_y.append(house.route.list_y[-1])
     # changes y coordinate

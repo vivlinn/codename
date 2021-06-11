@@ -71,6 +71,13 @@ if __name__ == "__main__":
 
     better_cables.better_cables(grid)
 
+    print()
+    for house in grid.houses:
+        if house.position_x == 19 and house.position_y == 12:
+            print(house.route.battery.position_x)
+        if house.position_x == 30 and house.position_y == 12:
+            print(house.route.battery.position_x)
+
     # costs = costs.get_costs(grid1)
     # print(costs)
 
