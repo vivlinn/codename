@@ -59,23 +59,30 @@ def better_cables(grid):
                     # remove house from list
                     houses_left.remove(house)
                     break
-
+    
     for house in grid.houses:
-        if house.position_x >= house.route.battery.position_x:
-            horizontal = -1
-        else:
-            horizontal = 1
-        
-        if house.position_y > house.route.battery.position_y:
-            vertical = -1
-        else:
-            vertical = 1
-        
+        horizontal, vertical = define_direction(house)
+
         lay_cables(grid, house, horizontal, vertical)
 
         
 
+def define_direction(house):
+    if house.route.list_x[-1] >= house.route.battery.position_x:
+        print("x xoordinaat van huis om horizontal te bepalen")
+        print(house.route.list_x[-1])
+        print("x coordinaat van battery")
+        print(house.route.battery.position_x)
+        horizontal = -1
+    else:
+        horizontal = 1
 
+    if house.route.list_y[-1] > house.route.battery.position_y:
+        vertical = -1
+    else:
+        vertical = 1
+
+    return horizontal, vertical
 
 
 def assign_battery(grid, house):
@@ -140,8 +147,8 @@ def lay_cables(grid, house, horizontal, vertical):
 
         if house.check == True:
             axis = "x"
-            bypass_battery(grid, house, house.route.list_x[-1] + horizontal, house.route.list_y[-1], horizontal, axis)
-        
+            bypass_battery(grid, house, house.route.list_x[-1] + horizontal, house.route.list_y[-1],vertical, horizontal, axis)
+            horizontal, vertical = define_direction(house)
         else:
             house.route.list_x.append(house.route.list_x[-1] + horizontal)
             house.route.list_y.append(house.route.list_y[-1])
@@ -150,15 +157,15 @@ def lay_cables(grid, house, horizontal, vertical):
         
         if house.check == True:
             axis = "y"
-            bypass_battery(grid, house, house.route.list_y[-1] + vertical, house.route.list_x[-1], vertical, axis)
-        
+            bypass_battery(grid, house, house.route.list_y[-1] + vertical, house.route.list_x[-1], vertical, horizontal, axis)
+            horizontal, vertical = define_direction(house)
         else:
             house.route.list_y.append(house.route.list_y[-1] + vertical)
             house.route.list_x.append(house.route.list_x[-1])
 
     return
 
-def bypass_battery(grid, house, x, y, direction, axis):
+def bypass_battery(grid, house, x, y, horizontal, vertical, axis):
     """
     bypasses battery if house is relocated and needed
     Input: grid class, house class, x integer, y integer, direction integer, axis string
@@ -172,45 +179,41 @@ def bypass_battery(grid, house, x, y, direction, axis):
     
     # check if new coordinated don't lead to other batteries
     for battery in other_batteries:
-        
         # bypass other batteries 
         if x == battery.position_x and y == battery.position_y:
+            # bewegen over de x-as
             if axis == "x":
-                if y == 50:
-                    # y-as down
-                    house.route.list_y.append(house.route.list_y[-1] - 1, house.route.list_y[-1], house.route.list_y[-1] + 1)
-                    # x-as
-                    house.route.list_x.append(house.route.list_x[-1], house.route.list_x[-1] + direction, house.route.list_x[-1])
-
-                else:
-                    # y-as
-                    house.route.list_y.append(house.route.list_y[-1] + 1, house.route.list_y[-1], house.route.list_y[-1] - 1)
-                    # x-as
-                    house.route.list_x.append(house.route.list_x[-1], house.route.list_x[-1] + direction, house.route.list_x[-1])
-
+                
+                # één naar vertical (boven of beneden) en één naar horizontal (links of rechts)
+                house.route.list_y.extend([house.route.list_y[-1] + vertical, house.route.list_y[-1] + vertical])
+                house.route.list_x.extend([house.route.list_x[-1], house.route.list_x[-1] + horizontal])
+            
+            # bewegen over de y-as
             else:
-                if x == 50:
-                    # x-as down
-                    house.route.list_x.append(house.route.list_x[-1] - 1, house.route.list_x[-1], house.route.list_x[-1] + 1)
-                    # y-as
-                    house.route.list_y.append(house.route.list_y[-1], house.route.list_y[-1] + direction, house.route.list_y[-1])
+                # één naar horizontal (links of rechts) en één naar vertical (boven of beneden)
+                # x-as down
+                house.route.list_x.extend([house.route.list_x[-1] + horizontal, house.route.list_x[-1] + horizontal])
+                # y-as
+                house.route.list_y.extend([house.route.list_y[-1], house.route.list_y[-1] + vertical])
+            return
 
-                    
-                else:
-                    # x-as
-                    house.route.list_x.append(house.route.list_x[-1] + 1, house.route.list_x[-1], house.route.list_x[-1] - 1)
-                    # y-as
-                    house.route.list_y.append(house.route.list_y[-1], house.route.list_y[-1] + direction, house.route.list_y[-1])
-        
-        # append if bypasses is not needed
-        else:
-            # changes x coordinate
-            if axis == "x":
-                house.route.list_x.append(house.route.list_x[-1] + direction)
-                house.route.list_y.append(house.route.list_y[-1])
-            # changes y coordinate
-            else:
-                house.route.list_y.append(house.route.list_y[-1] + direction)
-                house.route.list_x.append(house.route.list_x[-1])
+    # append if bypasses is not needed
+    # changes x coordinate
+    if axis == "x":
+        print("laatste coordinaat x: ")
+        print(house.route.list_x[-1])
+        print("direction:")
+        print(horizontal, vertical)
+        print("batterij x:")
+        print(battery.position_x)
+        print("house")
+        print(house.position_x)
+        print()
+        house.route.list_x.append(house.route.list_x[-1] + horizontal)
+        house.route.list_y.append(house.route.list_y[-1])
+    # changes y coordinate
+    else:
+        house.route.list_y.append(house.route.list_y[-1] + vertical)
+        house.route.list_x.append(house.route.list_x[-1])
 
     return
