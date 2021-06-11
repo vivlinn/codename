@@ -9,19 +9,10 @@ def better_cables(grid):
 
     # loop through all houses in grid
     for house in sorted_output:
-        battery_chosen = None
-        best = 101
-        for battery in grid.batteries:
-            distance = abs(battery.position_x - house.position_x) + abs(battery.position_y - house.position_y)
-            if distance < best:
-                best = distance
-                battery_chosen = battery
+        battery_chosen = assign_battery(grid)
             
         battery_chosen.connected_houses.append(house)
         battery_chosen.remaining -= house.max_output
-
-    print()
-    print('Done')
 
     houses_left = []
 
@@ -68,28 +59,44 @@ def better_cables(grid):
                     houses_left.remove(house)
                     break
 
+def assign_battery(grid, house):
+    """
+    assigns a battery to a house with the least distance between them
+    Input: grid class, house class
+    Returns: battery class
+    """
+    battery_chosen = None
+
+    best = grid.grid_height + grid.grid_width + 2
+    for battery in grid.batteries:
+        distance = abs(battery.position_x - house.position_x) + abs(battery.position_y - house.position_y)
+        if distance < best:
+            best = distance
+            battery_chosen = battery
+
+    return battery_chosen
+
 # https://www.programiz.com/python-programming/methods/list/sort
 def bubbleSort(arr):
+    """
+    sorts a list using bubble sort
+    Input: list
+    Returns: list
+    """
     n = len(arr)
 
     # Traverse through all array elements
     for i in range(n-1):
-    # range(n) also work but outer loop will repeat one time more than needed.
 
         # Last i elements are already in place
         for j in range(0, n-i-1):
 
-            # traverse the array from 0 to n-i-1
             # Swap if the element found is greater
-            # than the next element
             if arr[j].max_output < arr[j + 1].max_output :
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
     return arr
 
-    # for battery in grid.batteries:
-    #     print()
-    #     print(battery.connected_houses)
         
 
 

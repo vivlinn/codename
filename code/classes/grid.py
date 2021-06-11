@@ -8,8 +8,8 @@ from .route import Route
 
 class Grid():
     def __init__(self, file_batteries, file_houses):
-        self.grid_width = 10
-        self.grid_height = 10
+        self.grid_width = 50
+        self.grid_height = 50
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
         # self.cable = cable
