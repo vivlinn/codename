@@ -4,6 +4,13 @@ import queue
 import copy
 
 def better_cables(grid):
+    """
+    This function tries to assign the closest battery for every house.
+    It then checks if battery capacity is not exceeded, else assigns another battery to the house.
+    Then adds all route coordinates to a route class for every house
+    Input: grid class
+    Returns: None
+    """
 
     sorted_output = bubbleSort(grid.houses)
 
@@ -68,6 +75,11 @@ def better_cables(grid):
         
 
 def define_direction(house):
+    """
+    Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
+    Input: house class
+    Returns: horizontal int, vertical int
+    """
     if house.route.list_x[-1] >= house.route.battery.position_x:
         print("x xoordinaat van huis om horizontal te bepalen")
         print(house.route.list_x[-1])
