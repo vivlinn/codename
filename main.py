@@ -13,18 +13,19 @@ ITERATIONS = 10
 
 if __name__ == "__main__":
     
-    # check if command-line contains two arguments
+    # Check if command-line contains two arguments
     if len(argv) != 2:
         print("Usage: python3 main.py [district_number]")
         exit(1)
     
-    # check if map exists
+    # Check if map exists
     if not path.exists(f"data/district_{argv[1]}"):
         print("Usage: python3 main.py [district_number]")
         exit(1)
 
+    # Create grid of district using command-line argument as district number
     number = argv[1]
-    
+ 
     file_batteries = f"data/district_{number}/district-{number}_batteries.csv"
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
     grid = grid.Grid(file_batteries, file_houses)
@@ -69,6 +70,7 @@ if __name__ == "__main__":
 
     # print(output[counter])
 
+    # Apply first algorithm to grid
     better_cables.better_cables(grid)
 
     print()
@@ -81,4 +83,5 @@ if __name__ == "__main__":
     # costs = costs.get_costs(grid1)
     # print(costs)
 
+    # Visualise the grid as a plot
     visualise.visualise(grid, argv[1])
