@@ -1,5 +1,3 @@
-# Exclude everything
-output/*
-
-# Except the folder itself
-!output/.gitkeep
+# Exclude everything, except the folder itself
+*
+!.gitignore
