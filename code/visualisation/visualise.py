@@ -4,11 +4,17 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 
 def visualise(grid, number):
+    """
+    Credits: https://stackoverflow.com/questions/24943991/change-grid-interval-and-specify-tick-labels-in-matplotlib
+
+    This function takes a grid and a district number and creates a visualisation plot using the coordinates of objects.
+    """
     plt.grid(b=True, which='major', color='#666666', linestyle='-')
     
-    # https://stackoverflow.com/questions/24943991/change-grid-interval-and-specify-tick-labels-in-matplotlib
+    # Create a new figure
     fig, ax = plt.subplots()
 
+    # Major ticks every 10, minor ticks every 5
     major_ticks = np.arange(0, 51, 10)
     minor_ticks = np.arange(0, 51, 1)
     ax.set_xticks(major_ticks)
@@ -22,7 +28,7 @@ def visualise(grid, number):
 
     ax.set_title(f"District {number}")
 
-    # loop through objects to get coordinates
+    # Get x- and y-coordinates of objects and save in lists
     x_battery = []
     y_battery = []
     for battery in grid.batteries:
@@ -35,7 +41,6 @@ def visualise(grid, number):
         x_house.append(house.position_x)
         y_house.append(house.position_y)
         
-
         x_route = house.route.list_x
         y_route = house.route.list_y
         ax.plot(x_route, y_route)
@@ -43,38 +48,32 @@ def visualise(grid, number):
     
     # test = grid.houses[0]
 
-
     # x_route = test.route.list_x
     # y_route = test.route.list_y
     # ax.plot(x_route, y_route)
             
-
-
-
-
-
     # for cable in grid.cables:
     #     plt.plot(cable.start, cable.end)
 
-    # plot coordinates as simple x's and o's
+    # Plot coordinates as crosses and dots
     ax.plot(x_house, y_house, "rx")
     ax.plot(x_battery, y_battery, "bo")
 
-    # save simple plot with x's and o's
+    # Save plot with dots and crosses
     plt.savefig(f"output/district_{number}_simple.png")
 
-    # plot coordinates as house and battery images
-     # image paths
+    # Save images of house and battery in image paths
     house_path = "doc/house.png"
     battery_path = "doc/battery.png"
 
     house_image = plt.imread(house_path)[10:10+300, 10:10+400]
     battery_image = plt.imread(battery_path)[10:10+600, 10:10+400]
 
+    # Plot coordinates as houses and batteries
     plot_images(x_house, y_house, house_image, ax=ax)
     plot_images(x_battery, y_battery, battery_image, ax=ax)
 
-    # saves plot with pictures
+    # Save plot with houses and batteries
     plt.savefig(f"output/district_{number}_image.png")
     plt.show()
 
