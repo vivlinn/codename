@@ -1,5 +1,3 @@
-import csv
-import pandas as pd
 import json
 
 from sys import argv
@@ -9,7 +7,8 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise
 
-
+ITERATIONS = 500
+TEMPERATURE = 1500
 
 if __name__ == "__main__":
     
@@ -19,12 +18,12 @@ if __name__ == "__main__":
         exit(1)
 
 
-    # ---------------------------------- SETUP GRID ----------------------------------
+    """---------------------------------- SETUP GRID ----------------------------------"""
     
     # Check if folder for district exists
     if not path.exists(f"data/district_{argv[1]}"):
-        print("Usage: python3 main.py [district_number]")
-        exit(1)
+        print("path: for [district_number] does not exist")
+        exit(2)
 
     # Use the correct files for the chosen district
     number = argv[1]
@@ -35,53 +34,60 @@ if __name__ == "__main__":
     # Create grid with houses and batteries
     grid = grid.Grid(file_batteries, file_houses)
 
-    # ------------------------------------- RANDOM ----------------------------------
+
+    """------------------------------------- RANDOM ----------------------------------"""
     # Doesn't work (too slow for 150 houses)
 
     # state = randomize.Randomize(grid)
     # grid = state.run()
     
-
     
-    
-    # ------------------------------------- GREEDY ----------------------------------
+    """------------------------------------- GREEDY ----------------------------------"""
     # state = greedy.Greedy(grid)    
     # grid = state.run()
 
-    # ------------------------------ SIMULATED ANNEALING ----------------------------
-    state = simulated_annealing.Simulated_annealing(grid)
+
+    """------------------------------ SIMULATED ANNEALING ----------------------------"""
+    state = simulated_annealing.Simulated_annealing(grid, ITERATIONS, TEMPERATURE)
 
     grid = state.run()
 
     visualise.visualise_annealing(state)
 
 
-    # --------------------------------- GET COSTS -----------------------------------
+    """--------------------------------- GET COSTS -----------------------------------"""
     total_costs = costs.get_costs(grid)
 
-    # -----------------------------------OUTPUT--------------------------------------
+
+    """-----------------------------------OUTPUT--------------------------------------"""
     # Create output
     output = []
+
+    # append district name and total costs
     output.append({"district": argv[1], "costs-shared": total_costs})
     counter = 1
 
-    # Calculate total costs for grid
+    # append attributes for batteries
     for battery in grid.batteries:
         output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
         
+        # append attributes for houses
         for house in battery.connected_houses:
             cables = []
+
+            # append coordinates of route
             for xi, yi in zip(house.route.list_x, house.route.list_y):
                 cables.append(f"{xi}, {yi}")
             
             output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
 
+    # save file as json
     out_file = open("output/output.json", "w")
     json.dump(output, out_file, indent = 6)    
+
+    # close file
     out_file.close()
 
 
-    
-
-    # --------------------------- MAKE VISUALISATION ----------------------------------
+    """--------------------------- GRID VISUALISATION ----------------------------------"""
     visualise.visualise_grid(grid, argv[1])

@@ -1,4 +1,5 @@
-from . import greedy, randomize
+from .greedy import Greedy
+from .randomize import Randomize
 from code.classes.route import Route
 from code.visualisation import costs
 
@@ -20,10 +21,10 @@ class Simulated_annealing():
     Returns: Grid class
     """
 
-    def __init__(self, grid):
+    def __init__(self, grid, iterations, start_temperature):
         self.grid = grid
-        self.iterations = 1500
-        self.start_temperature = 500
+        self.iterations = iterations
+        self.start_temperature = start_temperature
         self.temperature = 0
         self.outcomes = []
 
@@ -73,10 +74,10 @@ class Simulated_annealing():
 
             grid_copy = copy.deepcopy(self.grid)
 
-            succes = randomize.assign_battery(grid_copy)
+            succes = Randomize.assign_battery(grid_copy)
 
             if succes == True:
-                start_state = greedy.create_cables(grid_copy, grid_copy.houses)
+                start_state = Greedy.create_cables(grid_copy, grid_copy.houses)
                 break
 
         return start_state
@@ -141,7 +142,7 @@ class Simulated_annealing():
             house.route = Route(battery_chosen, house.position_x, house.position_y)
 
 
-        greedy.create_cables(new_state, new_path)
+        Greedy.create_cables(new_state, new_path)
     
         return [succes, new_state]
 
