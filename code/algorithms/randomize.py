@@ -3,21 +3,32 @@ from code.classes.route import Route
 
 class Randomize():
     """
-    This function assigns a house randomly to a battery and creates randomly a route between these two.
-    
-    grid: Grid class
+    Random algorithm
 
-    Returns: None
+    Returns: Grid class
     """
+
     def __init__(self, grid):
         self.grid = grid
 
     def run(self):
+        """
+        Assigns houses to batteries randomly, then randomly lays a route between them
+
+        Returns: Grid class
+        """
         self.assign_battery()
         self.create_paths()
 
+        return self.grid
 
     def assign_battery(self):
+        """
+        Assigns houses to batteries randomly. If succesful for all then creates a route class for each house. 
+        If not succesful; exits function
+
+        Returns: Bool
+        """
 
         # loop through all houses in grid
         for house in self.grid.houses:
@@ -53,6 +64,13 @@ class Randomize():
         
             
     def create_paths(self):
+        """
+        Creates random paths from house to battery. 
+        Only checks to stay inside grid and not connect to multiple batteries
+
+        Returns: None
+        """
+
         for house in self.grid.houses:
 
             # save non-chosen batteries in list
@@ -131,3 +149,4 @@ class Randomize():
 
                             # append unchanged y coordinate to route list
                             house.route.list_y.append(ytest)
+        return

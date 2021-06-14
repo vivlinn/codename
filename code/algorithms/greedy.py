@@ -2,13 +2,9 @@ from code.classes.route import Route
 
 class Greedy():
     """
-    This function tries to assign the closest battery for every house.
-    It then checks if battery capacity is not exceeded, else assigns another battery to the house.
-    Then adds all route coordinates to a route class for every house
-    
-    grid: Grid class
+    Greedy algorithm.
 
-    Returns: None
+    Returns: Grid class
     """
 
     def __init__(self, grid):
@@ -17,11 +13,17 @@ class Greedy():
     def run(self):
         """
         Runs the greedy algorithm;
-        connects houses to batteries. Then creates paths between the house and the batteries.
+        This function tries to assign the closest battery for every house.
+        It then checks if battery capacity is not exceeded, else assigns another battery to the house.
+        Then adds all route coordinates to a route class for every house
+
+        Returns: Grid class
         """
 
         self.create_connections()
         self.create_cables()
+
+        return self.grid
 
     def create_connections(self):
         """
@@ -31,6 +33,7 @@ class Greedy():
 
         Returns: None
         """
+        
         sorted_output = self.bubbleSort(self.grid.houses, "house")
 
         # loop through all houses in grid
