@@ -1,7 +1,7 @@
 import random
 from code.classes.route import Route
 
-class randomize():
+class Randomize():
     """
     This function assigns a house randomly to a battery and creates randomly a route between these two.
     

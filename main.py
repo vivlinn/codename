@@ -38,18 +38,18 @@ if __name__ == "__main__":
     # ------------------------------------- RANDOM ----------------------------------
     # Doesn't work (too slow for 150 houses)
 
-    # state = randomize.randomize(grid)
+    # state = randomize.Randomize(grid)
     # grid = state.run()
     
 
     
     
     # ------------------------------------- GREEDY ----------------------------------
-    # state = greedy.greedy(grid)    
+    # state = greedy.Greedy(grid)    
     # grid = state.run()
 
     # ------------------------------ SIMULATED ANNEALING ----------------------------
-    state = simulated_annealing.simulated_annealing(grid)
+    state = simulated_annealing.Simulated_annealing(grid)
 
     grid = state.run()
 

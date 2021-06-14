@@ -7,7 +7,7 @@ import random
 from code.visualisation import costs
 
 
-class simulated_annealing():
+class Simulated_annealing():
     """
     Simulated annealing algorithm.
     Uses function from Random class to assign all houses to batteries for the start state.

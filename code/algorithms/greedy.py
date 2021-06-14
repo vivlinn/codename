@@ -1,6 +1,6 @@
 from code.classes.route import Route
 
-class greedy(grid):
+class Greedy():
     """
     This function tries to assign the closest battery for every house.
     It then checks if battery capacity is not exceeded, else assigns another battery to the house.
@@ -54,7 +54,7 @@ class greedy(grid):
         checks direction towards the coupled battery and lays cables between.
 
         list_houses: list
-        
+
         Returns: Grid class 
         """
 
