@@ -3,6 +3,7 @@ from . import greedy, random
 from code.classes.route import Route
 import copy
 import random
+from code.visualisation import costs
 
 # Herhaal:
     # Kies een random start state
@@ -30,8 +31,8 @@ class simulated_annealing():
 
         # HERHAAL N ITERATIES
         for i in range(self.iterations):
-            mutate(start_state)
-            check()
+            new_state = mutate(start_state)
+            check(old_state, new_state)
 
             # change temperature
 
@@ -52,6 +53,12 @@ class simulated_annealing():
                 print(succes)
 
         return start_state
+
+    def check(old_state, new_state):
+        costs_old = costs.get_costs(old_state)
+        costs_new = costs.get_costs(new_state)
+        probability = 2 ** ((costs_old - costs_new) / self.temperature)
+        if random.random(0,1) > probability:
 
     def mutate(self, start_state):
         # itereren over batterijen

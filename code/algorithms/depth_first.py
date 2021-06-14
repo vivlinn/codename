@@ -1,15 +1,29 @@
 import copy
 
-depth = 
-stack = [""]
-while len(stack)>0:
-    state=stack.pop()
-    print(state)
-    if len(state) < depth:
-        for i in ['R', 'L']:
-            child = copy.deepcopy(state)
-            child += i
-            stack.append(child)
+
+#depth = 20
+# depth = 3
+# queue = queue.Queue()
+# queue.put("")
+# while not queue.empty():
+#     state = queue.get()
+#     print(state)
+#     if len(state) < depth:
+#         for i in [ '1', '2']:
+#             child = copy.deepcopy(state)
+#             child += i
+#             queue.put(child)
+
+# depth = 
+# stack = [""]
+# while len(stack)>0:
+#     state=stack.pop()
+#     print(state)
+#     if len(state) < depth:
+#         for i in ['R', 'L']:
+#             child = copy.deepcopy(state)
+#             child += i
+#             stack.append(child)
 
 
 class DepthFirst:
