@@ -6,16 +6,19 @@ import copy
 import random
 from code.visualisation import costs
 
-# Herhaal:
-    # Kies een random start state
-    # Kies start temperatuur
-    # Herhaal N iteraties:
-        # Doe een kleine random aanpassing
-        # Als random( ) > kans(oud, nieuw, temperatuur):
-            # Maak de aanpassing ongedaan
-        # Verlaag temperatuur
 
 class simulated_annealing():
+    """
+    Simulated annealing algorithm.
+    Uses function from Random class to assign all houses to batteries for the start state.
+    Then lays paths using create paths function from Greedy class.
+
+    The algorithm rearranges houses over batteries and relays paths.
+
+    Then compares start state with new arranged state and uses an acceptance change to keep the "best" state. Stops after n iterations.
+
+    Returns: Grid class
+    """
 
     def __init__(self, grid):
         self.grid = grid
@@ -25,6 +28,11 @@ class simulated_annealing():
         self.outcomes = []
 
     def run(self):
+        """
+        Main function; first creates a start state, then loops n times to create a new state(Keeps trying until a state is reached where all houses are coupled to batteries.), compares their costs and accepts the best state.
+
+        Returns: Grid class
+        """
 
         # Get random start state
         old_state = self.start_state()
@@ -55,6 +63,12 @@ class simulated_annealing():
 
     # START STATE
     def start_state(self):
+        """
+        Creates a start state using the Randomize class and keeps trying until a state is reached where all houses are coupled to batteries.
+
+        Returns: Grid class
+        """
+
         while True:
 
             grid_copy = copy.deepcopy(self.grid)
@@ -68,6 +82,13 @@ class simulated_annealing():
         return start_state
 
     def mutate(self, old_state):
+        """
+        adjusts the previous state by swapping 5 houses per battery.
+
+        old_state: Grid class 
+
+        Returns: list; [Bool, Grid class]
+        """
 
         new_state = copy.deepcopy(old_state)
 
@@ -126,6 +147,16 @@ class simulated_annealing():
 
 
     def check(self, old_state, new_state):
+        """
+        Calculates the cost of previous and new state. 
+        Then calculates the acceptance probability incorporating temperature. 
+        Uses random number between 0 & 1 to accept worse new states at times.
+
+        old_state: Grid class
+        new_state: Grid class
+
+        Returns: Grid class
+        """
 
         costs_old = costs.get_costs(old_state)
         costs_new = costs.get_costs(new_state)
@@ -143,6 +174,12 @@ class simulated_annealing():
 
 
     def plot(self):
+        """
+        Gets both the costs of all inbetween states, and a range of 0 to the number of iterations of the algorithm as lists.
+
+        Returns: list of lists
+
+        """
         y_axis = self.outcomes
         x_axis = range(0,self.iterations)
 
