@@ -4,6 +4,13 @@ import queue
 import copy
 
 def random_cables(grid):
+    """
+    This function assigns a house randomly to a battery and creates randomly a route between these two.
+    
+    grid: Grid class
+
+    Returns: None
+    """
 
     # loop through all houses in grid
     for house in grid.houses:

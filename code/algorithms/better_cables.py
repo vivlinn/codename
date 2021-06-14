@@ -32,7 +32,7 @@ def better_cables(grid):
         lay_cables(grid, house, horizontal, vertical)
 
 def rearrange_houses(houses_left, sorted_batteries):
-     """
+    """
     takes all the houses without battery and tries to append them to a battery if possible
     
     houses_left: list
@@ -64,7 +64,7 @@ def rearrange_houses(houses_left, sorted_batteries):
                     break   
 
 def remove_excessive_houses(grid):
-     """
+    """
     Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
     
     grid: Grid class
