@@ -1,9 +1,10 @@
+from code.algorithms.simulated_annealing import simulated_annealing
 from sys import argv
 from code.classes import grid
 from code.visualisation import visualise
 from code.visualisation import costs
 from os import path
-from code.algorithms import random_cables, better_cables
+from code.algorithms import random, greedy, simulated_annealing
 import csv
 import pandas as pd
 import json
@@ -13,19 +14,18 @@ ITERATIONS = 10
 
 if __name__ == "__main__":
     
-    # Check if command-line contains two arguments
+    # check if command-line contains two arguments
     if len(argv) != 2:
         print("Usage: python3 main.py [district_number]")
         exit(1)
     
-    # Check if map exists
+    # check if map exists
     if not path.exists(f"data/district_{argv[1]}"):
         print("Usage: python3 main.py [district_number]")
         exit(1)
 
-    # Create grid of district using command-line argument as district number
     number = argv[1]
- 
+    
     file_batteries = f"data/district_{number}/district-{number}_batteries.csv"
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
     grid = grid.Grid(file_batteries, file_houses)
@@ -70,18 +70,18 @@ if __name__ == "__main__":
 
     # print(output[counter])
 
-    # Apply first algorithm to grid
-    better_cables.better_cables(grid)
+    # greedy.greedy(grid)
 
-    print()
-    for house in grid.houses:
-        if house.position_x == 19 and house.position_y == 12:
-            print(house.route.battery.position_x)
-        if house.position_x == 30 and house.position_y == 12:
-            print(house.route.battery.position_x)
+    state = simulated_annealing.simulated_annealing(grid)
+
+    # print()
+    # for house in grid.houses:
+    #     if house.position_x == 19 and house.position_y == 12:
+    #         print(house.route.battery.position_x)
+    #     if house.position_x == 30 and house.position_y == 12:
+    #         print(house.route.battery.position_x)
 
     # costs = costs.get_costs(grid1)
     # print(costs)
 
-    # Visualise the grid as a plot
-    visualise.visualise(grid, argv[1])
+    visualise.visualise(state, argv[1])
