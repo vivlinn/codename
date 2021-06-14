@@ -31,8 +31,8 @@ class simulated_annealing():
 
         # HERHAAL N ITERATIES
         for i in range(self.iterations):
-            new_state = mutate(start_state)
-            check(old_state, new_state)
+            new_state = self.mutate(start_state)
+            self.check(start_state, new_state)
 
             # change temperature
 
@@ -59,6 +59,7 @@ class simulated_annealing():
         costs_new = costs.get_costs(new_state)
         probability = 2 ** ((costs_old - costs_new) / self.temperature)
         if random.random(0,1) > probability:
+
 
     def mutate(self, start_state):
         # itereren over batterijen
