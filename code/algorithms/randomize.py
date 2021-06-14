@@ -133,32 +133,3 @@ def create_paths(grid, battery, house):
 
                     # append unchanged y coordinate to route list
                     house.route.list_y.append(ytest)
-
-
-
-
-
-
-
-
-    print(house.route.list_x) 
-    print(house.route.list_y)  
-    print()      
-
-
-
-
-
-
-#         depth = 20
-# depth = 3
-# queue = queue.Queue()
-# queue.put("")
-# while not queue.empty():
-#     state = queue.get()
-#     print(state)
-#     if len(state) < depth:
-#         for i in [ '1', '2']:
-#             child = copy.deepcopy(state)
-#             child += i
-#             queue.put(child)

@@ -18,5 +18,5 @@ def get_costs(grid):
     costs["batteries"] = len(batteries) * 5000
     costs["total"] = costs["cables"] + costs["batteries"]
 
-    return costs
+    return costs["total"]
 

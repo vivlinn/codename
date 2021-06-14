@@ -4,6 +4,7 @@ from code.visualisation import costs
 
 import copy
 import random
+from code.visualisation import costs
 
 # Herhaal:
     # Kies een random start state
