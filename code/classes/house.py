@@ -6,5 +6,4 @@ class House():
         self.position_y = position_y
         self.route = None
         self.check = False
-        # self.price = price
         

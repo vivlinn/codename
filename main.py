@@ -34,10 +34,19 @@ if __name__ == "__main__":
     
     # Create grid with houses and batteries
     grid = grid.Grid(file_batteries, file_houses)
+
+    # ------------------------------------- RANDOM ----------------------------------
+    # Doesn't work (too slow for 150 houses)
+
+    # state = randomize.randomize(grid)
+    # grid = state.run()
+    
+
     
     
     # ------------------------------------- GREEDY ----------------------------------
-    # greedy.greedy(grid)    
+    # state = greedy.greedy(grid)    
+    # grid = state.run()
 
     # ------------------------------ SIMULATED ANNEALING ----------------------------
     state = simulated_annealing.simulated_annealing(grid)

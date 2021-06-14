@@ -6,7 +6,6 @@ class Battery():
         self.position_x = position_x
         self.position_y = position_y
         self.connected_houses = []
-        # self.price = price
 
     def add_house(self, house):
         self.connected_houses.append(house)
