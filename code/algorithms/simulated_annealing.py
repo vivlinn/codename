@@ -19,9 +19,10 @@ class simulated_annealing():
 
     def __init__(self, grid):
         self.grid = grid
-        self.iterations = 100
-        self.start_temperature = 1000
+        self.iterations = 1500
+        self.start_temperature = 500
         self.temperature = 0
+        self.outcomes = []
 
     def run(self):
 
@@ -32,7 +33,8 @@ class simulated_annealing():
         for i in range(self.iterations):
 
             # change temperature
-            self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
+            self.temperature = self.start_temperature * (0.996 ** i)
+            # self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
 
             # make small mutations
             while True:
@@ -44,6 +46,7 @@ class simulated_annealing():
 
         
             # compare states and accept best state
+            print("Iteration: ")
             print(i)
             old_state = self.check(old_state, new_state)
 
@@ -65,31 +68,24 @@ class simulated_annealing():
         return start_state
 
     def mutate(self, old_state):
-        # itereren over batterijen
-            # haal vijf random huizen eruit
-            # stop deze in de lijst
-        
-        # itereer over lengte van de lijst
-            # kies random huis uit lijst
-                # itereer over batterijen
-                    # koppel dit huis aan de batterij
-                        # check of het is gelukt
-                            # return false
-        # return true
 
         new_state = copy.deepcopy(old_state)
 
         houses_left = []
         new_path = houses_left
+
         for battery in new_state.batteries:
+
             # shuffle connected houses in random order
             random.shuffle(battery.connected_houses)
 
             for i in range(5):
                 # remove house from battery
                 house = battery.connected_houses.pop()
+
                 # update remaining capacity
                 battery.remaining += house.max_output
+
                 # add house to houses_left
                 houses_left.append(house)
 
@@ -117,7 +113,7 @@ class simulated_annealing():
                     break
                 
                 if succes == False:
-                    return [succes, new_state]
+                    return [succes, old_state]
 
             # add route object to the house
             battery_chosen.connected_houses.append(house)
@@ -126,7 +122,7 @@ class simulated_annealing():
 
         greedy.create_cables(new_state, new_path)
     
-        return succes, old_state
+        return [succes, new_state]
 
 
     def check(self, old_state, new_state):
@@ -138,7 +134,16 @@ class simulated_annealing():
 
         if random.random() < probability:
             # accept new state
+            self.outcomes.append(costs_new)
             return new_state
         else:
             # accept old state
+            self.outcomes.append(costs_old)
             return old_state
+
+
+    def plot(self):
+        y_axis = self.outcomes
+        x_axis = range(0,self.iterations)
+
+        return [x_axis, y_axis]

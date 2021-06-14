@@ -2,8 +2,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
+def visualise_annealing(state):
+    """
+    This function takes a state and a district number and creates a visualisation plot using the coordinates of objects.
+    """
 
-def visualise(grid, number):
+
+    x, y = state.plot()
+    print(f"x: {x}")
+    print(f"y: {y}")
+        # x = axis[0]
+        # y = axis[1]
+        
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    plt.savefig(f"output/annealing.png")
+
+def visualise_grid(grid, number):
     """
     Credits: https://stackoverflow.com/questions/24943991/change-grid-interval-and-specify-tick-labels-in-matplotlib
 

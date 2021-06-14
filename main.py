@@ -44,6 +44,8 @@ if __name__ == "__main__":
 
     grid = state.run()
 
+    visualise.visualise_annealing(state)
+
 
     # --------------------------------- GET COSTS -----------------------------------
     total_costs = costs.get_costs(grid)
@@ -73,4 +75,4 @@ if __name__ == "__main__":
     
 
     # --------------------------- MAKE VISUALISATION ----------------------------------
-    visualise.visualise(grid, argv[1])
+    visualise.visualise_grid(grid, argv[1])
