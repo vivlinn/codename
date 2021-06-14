@@ -38,8 +38,9 @@ def rearrange_houses(houses_left, sorted_batteries):
     houses_left: list
     sorted_batteries: list
 
-    Returns: horizontal: int, vertical: int
+    Returns: None
     """
+
     # go until no more houses left
     while len(houses_left) > 0:
 
@@ -65,7 +66,7 @@ def rearrange_houses(houses_left, sorted_batteries):
 
 def remove_excessive_houses(grid):
     """
-    Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
+    unconnects houses from battery and appends these left over houses to a list
     
     grid: Grid class
 
