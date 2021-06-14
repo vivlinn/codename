@@ -250,10 +250,10 @@ class Greedy():
                 axis = "x"
 
                 # check if path doesn't cross other batteries
-                bypass_battery(house, horizontal, vertical, axis, other_batteries)
+                self.bypass_battery(house, horizontal, vertical, axis, other_batteries)
 
                 # re-calculate direction from path to battery
-                horizontal, vertical = define_direction(house)
+                horizontal, vertical = self.define_direction(house)
             else:
                 house.route.list_x.append(house.route.list_x[-1] + horizontal)
                 house.route.list_y.append(house.route.list_y[-1])
