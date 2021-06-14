@@ -23,24 +23,31 @@ class simulated_annealing():
         self.start_temperature = 1000
         self.temperature = 0
 
-
     def run(self):
 
-        # KIES EEN START STATE
+        # Get random start state
         old_state = self.start_state()
 
-        # KIES EEN TEMPERATUUR
-
-        # HERHAAL N ITERATIES
+        # loop N times
         for i in range(self.iterations):
+
             # change temperature
             self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
-            # make mutations
-            new_state = self.mutate(old_state)
+
+            # make small mutations
+            while True:
+                output = self.mutate(old_state)
+                
+                if output[0] == True:
+                    new_state = output[1]
+                    break
+
+        
             # compare states and accept best state
+            print(i)
             old_state = self.check(old_state, new_state)
 
-        return old_state    
+        return old_state 
             
 
     # START STATE
@@ -54,8 +61,6 @@ class simulated_annealing():
             if succes == True:
                 start_state = greedy.create_cables(grid_copy, grid_copy.houses)
                 break
-            else:
-                print(succes)
 
         return start_state
 
@@ -91,6 +96,7 @@ class simulated_annealing():
 
         random.shuffle(houses_left)
         for house in houses_left:
+
             # loop till a battery is assigned to a house
             while True:
 
@@ -100,7 +106,6 @@ class simulated_annealing():
                         succes = True
                         break
                 
-
                 # assign random battery to the house
                 battery_chosen = random.choice(new_state.batteries)
 
@@ -112,7 +117,7 @@ class simulated_annealing():
                     break
                 
                 if succes == False:
-                    break
+                    return [succes, new_state]
 
             # add route object to the house
             battery_chosen.connected_houses.append(house)
@@ -120,12 +125,11 @@ class simulated_annealing():
 
 
         greedy.create_cables(new_state, new_path)
+    
+        return succes, old_state
 
 
     def check(self, old_state, new_state):
-        print()
-        print(old_state)
-        print(new_state)
 
         costs_old = costs.get_costs(old_state)
         costs_new = costs.get_costs(new_state)
