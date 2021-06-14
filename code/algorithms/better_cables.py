@@ -19,28 +19,27 @@ def better_cables(grid):
         # assign closest battery to house
         assign_battery(grid, house)
 
-    houses_left = []
-
-    # iterate over batteries
-    for battery in grid.batteries:
-            
-        # if battery is full
-        while battery.remaining < 0:
-
-            # remove last house
-            house = battery.remove_house()
-
-            # update houses left
-            houses_left.append(house)
-
-            house.check = True
-
-            # update remainig capacity of battery
-            battery.update_remaining(house, "add")
+    houses_left = remove_excessive_houses()
 
     bubbleSort(houses_left, "house")
     sorted_batteries = bubbleSort(grid.batteries, "battery")
 
+    rearrange_houses(houses_left, sorted_batteries)
+    
+    for house in grid.houses:
+        horizontal, vertical = define_direction(house)
+
+        lay_cables(grid, house, horizontal, vertical)
+
+def rearrange_houses(houses_left, sorted_batteries):
+     """
+    takes all the houses without battery and tries to append them to a battery if possible
+    
+    houses_left: list
+    sorted_batteries: list
+
+    Returns: horizontal: int, vertical: int
+    """
     # go until no more houses left
     while len(houses_left) > 0:
 
@@ -62,14 +61,37 @@ def better_cables(grid):
                    
                     # remove house from list
                     houses_left.remove(house)
-                    break
+                    break   
+
+def remove_excessive_houses(grid):
+     """
+    Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
     
-    for house in grid.houses:
-        horizontal, vertical = define_direction(house)
+    grid: Grid class
 
-        lay_cables(grid, house, horizontal, vertical)
+    Returns: list
+    """
 
-        
+    houses_left = []
+
+    # iterate over batteries
+    for battery in grid.batteries:
+            
+        # if battery is full
+        while battery.remaining < 0:
+
+            # remove last house
+            house = battery.remove_house()
+
+            # update houses left
+            houses_left.append(house)
+
+            house.check = True
+
+            # update remainig capacity of battery
+            battery.update_remaining(house, "add")
+            
+        return houses_left
 
 def define_direction(house):
     """
