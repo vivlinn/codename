@@ -1,6 +1,7 @@
-from main import ITERATIONS
-from . import greedy, random
+from . import greedy, randomize
 from code.classes.route import Route
+from code.visualisation import costs
+
 import copy
 import random
 
@@ -18,24 +19,28 @@ class simulated_annealing():
     def __init__(self, grid):
         self.grid = grid
         self.iterations = 100
-        self.temperature = 1000
+        self.start_temperature = 1000
+        self.temperature = 0
 
 
     def run(self):
 
         # KIES EEN START STATE
-        start_state = self.start_state(self.grid)
+        old_state = self.start_state()
 
         # KIES EEN TEMPERATUUR
 
         # HERHAAL N ITERATIES
         for i in range(self.iterations):
-            mutate(start_state)
-            check()
-
             # change temperature
+            self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
+            # make mutations
+            new_state = self.mutate(old_state)
+            # compare states and accept best state
+            old_state = self.check(old_state, new_state)
 
-
+        return old_state    
+            
 
     # START STATE
     def start_state(self):
@@ -43,17 +48,17 @@ class simulated_annealing():
 
             grid_copy = copy.deepcopy(self.grid)
 
-            succes = random.assign_battery(grid_copy)
+            succes = randomize.assign_battery(grid_copy)
 
             if succes == True:
-                start_state = greedy.create_cables(grid_copy)
+                start_state = greedy.create_cables(grid_copy, grid_copy.houses)
                 break
             else:
                 print(succes)
 
         return start_state
 
-    def mutate(self, start_state):
+    def mutate(self, old_state):
         # itereren over batterijen
             # haal vijf random huizen eruit
             # stop deze in de lijst
@@ -66,10 +71,11 @@ class simulated_annealing():
                             # return false
         # return true
 
-        old_state = copy.deepcopy(start_state)
+        new_state = copy.deepcopy(old_state)
 
         houses_left = []
-        for battery in old_state.batteries:
+        new_path = houses_left
+        for battery in new_state.batteries:
             # shuffle connected houses in random order
             random.shuffle(battery.connected_houses)
 
@@ -88,14 +94,14 @@ class simulated_annealing():
             while True:
 
                 succes = False
-                for battery in old_state.batteries:
+                for battery in new_state.batteries:
                     if house.max_output <= battery.remaining:
                         succes = True
                         break
                 
 
                 # assign random battery to the house
-                battery_chosen = random.choice(old_state.batteries)
+                battery_chosen = random.choice(new_state.batteries)
 
                 # check if battery has capacity for the house
                 if battery_chosen.remaining >= house.max_output:
@@ -105,9 +111,29 @@ class simulated_annealing():
                     break
                 
                 if succes == False:
-                    return succes
+                    break
 
             # add route object to the house
             battery_chosen.connected_houses.append(house)
             house.route = Route(battery_chosen, house.position_x, house.position_y)
 
+
+        greedy.create_cables(new_state, new_path)
+
+
+    def check(self, old_state, new_state):
+        print()
+        print(old_state)
+        print(new_state)
+
+        costs_old = costs.get_costs(old_state)
+        costs_new = costs.get_costs(new_state)
+
+        probability = 2 ** ((costs_old - costs_new) / self.temperature)
+
+        if random.random() < probability:
+            # accept new state
+            return new_state
+        else:
+            # accept old state
+            return old_state

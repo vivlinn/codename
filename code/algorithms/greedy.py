@@ -91,9 +91,9 @@ def remove_excessive_houses(grid):
             
         return houses_left
 
-def create_cables(grid):
+def create_cables(grid, list_houses):
 
-    for house in grid.houses:
+    for house in list_houses:
         horizontal, vertical = define_direction(house)
 
         lay_cables(grid, house, horizontal, vertical)

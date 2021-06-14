@@ -4,13 +4,10 @@ from code.classes import grid
 from code.visualisation import visualise
 from code.visualisation import costs
 from os import path
-from code.algorithms import random, greedy, simulated_annealing
+from code.algorithms import randomize, greedy, simulated_annealing
 import csv
 import pandas as pd
 import json
-
-
-ITERATIONS = 10
 
 if __name__ == "__main__":
     
@@ -73,6 +70,8 @@ if __name__ == "__main__":
     # greedy.greedy(grid)
 
     state = simulated_annealing.simulated_annealing(grid)
+
+    state.run()
 
     # print()
     # for house in grid.houses:
