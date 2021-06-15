@@ -1,5 +1,6 @@
 import json
 import copy
+import time
 
 from sys import argv
 from os import path
@@ -8,9 +9,9 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 100
+ITERATIONS = 25000
 TEMPERATURE = 1000
-LONGRUN = 5
+LONGRUN = 80
 
 if __name__ == "__main__":
     
@@ -51,6 +52,7 @@ if __name__ == "__main__":
 
     lowest_costs = 99999999999999999999999
     quickest_run = 99999999999999999999999
+    total_time = 0
 
     for i in range(LONGRUN):
         """------------------------------ SIMULATED ANNEALING ----------------------------"""
@@ -58,10 +60,15 @@ if __name__ == "__main__":
         copy_grid = copy.deepcopy(grid)
         state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
 
+        start = time.time()
+
         copy_grid = state.run()
+        
+        end = time.time()
 
         visualise.visualise_annealing(state)
 
+        total_time = total_time + (end - start)
 
         """--------------------------------- GET COSTS -----------------------------------"""
         total_costs = costs.get_costs(copy_grid)
@@ -73,12 +80,11 @@ if __name__ == "__main__":
         if iterations < quickest_run:
             quickest_run = iterations
 
-
     # Create output
     final = []
 
     # append district name and total costs
-    final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run })
+    final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
 
     # save file as json
     final_file = open("output/final.json", "w")

@@ -42,7 +42,7 @@ class Simulated_annealing():
             print(i)
 
             # start checking after 100 iterations
-            if i > 201:
+            if i > 1001:
                 counter = 0
 
                 # check if last 20 outcomes are the same
@@ -188,7 +188,8 @@ class Simulated_annealing():
         costs_old = costs.get_costs(old_state)
         costs_new = costs.get_costs(new_state)
 
-        probability = 2 ** ((costs_old - costs_new) / self.temperature)
+        probability = 2 ** ((costs_old - costs_new) )
+        #/ self.temperature
 
         if random.random() < probability:
             # accept new state
