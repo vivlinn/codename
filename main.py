@@ -11,7 +11,7 @@ from code.visualisation import costs, visualise, longrun
 
 ITERATIONS = 25000
 TEMPERATURE = 1000
-LONGRUN = 80
+LONGRUN = 1
 
 if __name__ == "__main__":
     
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # state = greedy.Greedy(grid)    
     # grid = state.run()
 
-
+    """------------------------------------- LOOP ----------------------------------"""
     lowest_costs = 99999999999999999999999
     quickest_run = 99999999999999999999999
     total_time = 0
@@ -60,14 +60,17 @@ if __name__ == "__main__":
         copy_grid = copy.deepcopy(grid)
         state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
 
+        # start time
         start = time.time()
 
         copy_grid = state.run()
-        
+         
+        # end time 
         end = time.time()
 
         visualise.visualise_annealing(state)
 
+        # add time of 1 run to total run time
         total_time = total_time + (end - start)
 
         """--------------------------------- GET COSTS -----------------------------------"""
