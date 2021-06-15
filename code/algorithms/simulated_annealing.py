@@ -73,15 +73,15 @@ class Simulated_annealing():
         while True:
 
             grid_copy = copy.deepcopy(self.grid)
-
+            
             grid = Randomize(grid_copy)
-            succes = grid.assign_battery()
+            succes, grid_copy = grid.assign_battery(grid_copy)
 
+            print(succes)
+            
             if succes == True:
-                for house in grid_copy.houses:
-                    house.check = True
 
-                grid = Greedy(grid_copy)
+                grid= Greedy(grid_copy)
                 start_state = grid.create_cables(grid_copy.houses)
 
                 break
@@ -150,8 +150,8 @@ class Simulated_annealing():
             battery_chosen.connected_houses.append(house)
             house.route = Route(battery_chosen, house.position_x, house.position_y)
 
-
-        Greedy.create_cables(new_state, new_path)
+        grid = Greedy(new_state)
+        new_state = grid.create_cables(new_path)
     
         return [succes, new_state]
 

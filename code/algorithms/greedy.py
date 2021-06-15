@@ -63,6 +63,7 @@ class Greedy():
 
         for house in list_houses:
             horizontal, vertical = self.define_direction(house)
+            
 
             self.lay_cables(house, horizontal, vertical)
         
@@ -238,16 +239,16 @@ class Greedy():
 
         Returns: None
         """
-
+        
         # save non-chosen batteries in list
         other_batteries = []
         for battery in self.grid.batteries:
             if battery != house.route.battery:
                 other_batteries.append(battery)
-
+    
         # loop till x-coordinate of cable matches x-coordinate of battery
         while house.route.list_x[-1] != house.route.battery.position_x:
-
+         
             # when house is not coupled to closest battery
             if house.check == True:
                 axis = "x"
@@ -263,7 +264,7 @@ class Greedy():
 
         # loop till y-coordinate of cable matches y-coordinate of battery
         while house.route.list_y[-1] != house.route.battery.position_y:
-            
+
             # when house is not coupled to closest battery
             if house.check == True:
                 axis = "y"
@@ -295,21 +296,24 @@ class Greedy():
         returns: None
         """
         x = house.route.list_x[-1]
-        y = house.route.list_x[-1]
-        
+        y = house.route.list_y[-1]
+  
+        # print(house)
+
         # check if new coordinated don't lead to other batteries
         for battery in other_batteries:
-                
+            # print(battery)
+              
             # if path is moving across the x-axis
             if axis == "x":
-
+                
                 # bypass other batteries 
                 if x + horizontal == battery.position_x and y == battery.position_y:
 
                     # Move one y-coordinate up or down, then one x coordinate left or right depending on direction towards right battery
                     house.route.list_y.extend([y + vertical, y + vertical])
                     house.route.list_x.extend([x, x + horizontal])
-                
+                    return
             # bewegen over de y-as
             else:
 
@@ -319,12 +323,11 @@ class Greedy():
                     # Move one x coordinate left or right, then one y-coordinate up or down depending on direction towards right battery
                     house.route.list_x.extend([x + horizontal, x + horizontal])
                     house.route.list_y.extend([y, y + vertical])
-
-            return
+                    return
 
         # append if bypasses is not needed
         if axis == "x":
-
+            
             # changes x coordinate
             house.route.list_x.append(x + horizontal)
             house.route.list_y.append(y)

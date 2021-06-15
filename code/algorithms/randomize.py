@@ -23,7 +23,7 @@ class Randomize():
 
         return self.grid
 
-    def assign_battery(self):
+    def assign_battery(self, grid):
         """
         Assigns houses to batteries randomly. If succesful for all then creates a route class for each house. 
         If not succesful; exits function
@@ -32,19 +32,19 @@ class Randomize():
         """
 
         # loop through all houses in grid
-        for house in self.grid.houses:
+        for house in grid.houses:
 
             # loop till a battery is assigned to a house
             while True:
 
                 succes = False
-                for battery in self.grid.batteries:
+                for battery in grid.batteries:
                     if house.max_output <= battery.remaining:
                         succes = True
                         break
                 
                 # assign random battery to the house
-                battery_chosen = random.choice(self.grid.batteries)
+                battery_chosen = random.choice(grid.batteries)
 
                 # check if battery has capacity for the house
                 if battery_chosen.remaining >= house.max_output:
@@ -54,14 +54,14 @@ class Randomize():
                     break
                 
                 if succes == False:
-                    return succes
+                    return succes, self.grid
 
             # add route object to the house
             battery_chosen.connected_houses.append(house)
             house.route = Route(battery_chosen, house.position_x, house.position_y)
 
 
-        return succes
+        return succes, self.grid
         
             
     def create_paths(self):
