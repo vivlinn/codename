@@ -5,7 +5,6 @@ from code.visualisation import costs
 
 import copy
 import random
-from code.visualisation import costs
 
 
 class Simulated_annealing():
@@ -60,13 +59,13 @@ class Simulated_annealing():
                     
                     
             # change temperature
-# ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+            # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
             # self.temperature = self.start_temperature * (0.999 ** i)
-# ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+            # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
 
-# --------------------------------------------- LINEAIR ------------------------------------------------ #
+            # --------------------------------------------- LINEAIR ------------------------------------------------ #
             # self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
-# --------------------------------------------- LINEAIR ------------------------------------------------ #            
+            # --------------------------------------------- LINEAIR ------------------------------------------------ #            
 
             # make small mutations
             while True:

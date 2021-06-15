@@ -1,14 +1,16 @@
 import json
+import copy
 
 from sys import argv
 from os import path
 
 from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
-from code.visualisation import costs, visualise
+from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 10000
+ITERATIONS = 100
 TEMPERATURE = 1000
+LONGRUN = 5
 
 if __name__ == "__main__":
     
@@ -47,47 +49,73 @@ if __name__ == "__main__":
     # grid = state.run()
 
 
-    """------------------------------ SIMULATED ANNEALING ----------------------------"""
-    state = simulated_annealing.Simulated_annealing(grid, ITERATIONS, TEMPERATURE)
+    lowest_costs = 99999999999999999999999
+    quickest_run = 99999999999999999999999
 
-    grid = state.run()
+    for i in range(LONGRUN):
+        """------------------------------ SIMULATED ANNEALING ----------------------------"""
+         # Create grid with houses and batteries
+        copy_grid = copy.deepcopy(grid)
+        state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
 
-    visualise.visualise_annealing(state)
+        copy_grid = state.run()
+
+        visualise.visualise_annealing(state)
 
 
-    """--------------------------------- GET COSTS -----------------------------------"""
-    total_costs = costs.get_costs(grid)
+        """--------------------------------- GET COSTS -----------------------------------"""
+        total_costs = costs.get_costs(copy_grid)
+
+        iterations = longrun.write_to_file(total_costs, state)
+
+        if total_costs < lowest_costs:
+            lowest_costs = total_costs
+        if iterations < quickest_run:
+            quickest_run = iterations
 
 
-    """-----------------------------------OUTPUT--------------------------------------"""
     # Create output
-    output = []
+    final = []
 
     # append district name and total costs
-    output.append({"district": argv[1], "costs-shared": total_costs})
-    counter = 1
-
-    # append attributes for batteries
-    for battery in grid.batteries:
-        output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
-        
-        # append attributes for houses
-        for house in battery.connected_houses:
-            cables = []
-
-            # append coordinates of route
-            for xi, yi in zip(house.route.list_x, house.route.list_y):
-                cables.append(f"{xi}, {yi}")
-            
-            output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
+    final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run })
 
     # save file as json
-    out_file = open("output/output.json", "w")
-    json.dump(output, out_file, indent = 6)    
+    final_file = open("output/final.json", "w")
+    json.dump(final, final_file, indent = 6)    
 
     # close file
-    out_file.close()
+    final_file.close()
+
+    # """-----------------------------------OUTPUT--------------------------------------"""
+    # # Create output
+    # output = []
+
+    # # append district name and total costs
+    # output.append({"district": argv[1], "costs-shared": total_costs})
+    # counter = 1
+
+    # # append attributes for batteries
+    # for battery in grid.batteries:
+    #     output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
+        
+    #     # append attributes for houses
+    #     for house in battery.connected_houses:
+    #         cables = []
+
+    #         # append coordinates of route
+    #         for xi, yi in zip(house.route.list_x, house.route.list_y):
+    #             cables.append(f"{xi}, {yi}")
+            
+    #         output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
+
+    # # save file as json
+    # out_file = open("output/output.json", "w")
+    # json.dump(output, out_file, indent = 6)    
+
+    # # close file
+    # out_file.close()
 
 
-    """--------------------------- GRID VISUALISATION ----------------------------------"""
-    visualise.visualise_grid(grid, argv[1])
+    # """--------------------------- GRID VISUALISATION ----------------------------------"""
+    # visualise.visualise_grid(grid, argv[1])
