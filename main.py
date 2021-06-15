@@ -11,7 +11,7 @@ from code.visualisation import costs, visualise, longrun
 
 ITERATIONS = 25000
 TEMPERATURE = 1000
-LONGRUN = 1
+LONGRUN = 80
 
 if __name__ == "__main__":
     
