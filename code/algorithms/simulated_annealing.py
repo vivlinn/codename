@@ -25,7 +25,7 @@ class Simulated_annealing():
         self.grid = grid
         self.iterations = iterations
         self.start_temperature = start_temperature
-        self.temperature = 0
+        self.temperature = 1
         self.outcomes = []
 
     def run(self):
@@ -47,7 +47,7 @@ class Simulated_annealing():
                 counter = 0
 
                 # check if last 20 outcomes are the same
-                for j in range(1, 200):
+                for j in range(1, 1000):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
@@ -55,13 +55,18 @@ class Simulated_annealing():
                         
 
                 # if last 20 were the same
-                if counter == 199:
+                if counter == 999:
                     return old_state 
                     
                     
             # change temperature
-            self.temperature = self.start_temperature * (0.99999 ** i)
+# ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+            # self.temperature = self.start_temperature * (0.999 ** i)
+# ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+
+# --------------------------------------------- LINEAIR ------------------------------------------------ #
             # self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
+# --------------------------------------------- LINEAIR ------------------------------------------------ #            
 
             # make small mutations
             while True:

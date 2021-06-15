@@ -15,6 +15,12 @@ def visualise_annealing(state):
         # y = axis[1]
         
     fig, ax = plt.subplots()
+
+    ax.set_title("Simulated Annealing")
+    ax.set_xlabel("Iterations")
+    ax.set_ylabel("Total costs")
+    ax.grid(True)
+
     ax.plot(x, y)
     plt.savefig(f"output/annealing.png")
 
