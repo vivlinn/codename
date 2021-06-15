@@ -74,10 +74,16 @@ class Simulated_annealing():
 
             grid_copy = copy.deepcopy(self.grid)
 
-            succes = Randomize.assign_battery(grid_copy)
+            grid = Randomize(grid_copy)
+            succes = grid.assign_battery()
 
             if succes == True:
-                start_state = Greedy.create_cables(grid_copy, grid_copy.houses)
+                for house in grid_copy.houses:
+                    house.check = True
+
+                grid = Greedy(grid_copy)
+                start_state = grid.create_cables(grid_copy.houses)
+
                 break
 
         return start_state
@@ -104,6 +110,9 @@ class Simulated_annealing():
             for i in range(5):
                 # remove house from battery
                 house = battery.connected_houses.pop()
+
+                # set check at True again
+                house.check = True
 
                 # update remaining capacity
                 battery.remaining += house.max_output
@@ -182,6 +191,6 @@ class Simulated_annealing():
 
         """
         y_axis = self.outcomes
-        x_axis = range(0,self.iterations)
+        x_axis = range(0,len(self.outcomes))
 
-        return [x_axis, y_axis]
+        return x_axis, y_axis

@@ -131,7 +131,7 @@ class Greedy():
             return houses_left
 
 
-    def define_direction(house):
+    def define_direction(self, house):
         """
         Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
         
@@ -277,9 +277,12 @@ class Greedy():
                 house.route.list_y.append(house.route.list_y[-1] + vertical)
                 house.route.list_x.append(house.route.list_x[-1])
 
+        # set checking back to
+        house.check = False
+
         return
 
-    def bypass_battery(house, horizontal, vertical, axis, other_batteries):
+    def bypass_battery(self, house, horizontal, vertical, axis, other_batteries):
         """
         bypasses battery if house is relocated and needed
 

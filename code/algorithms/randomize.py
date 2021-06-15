@@ -17,6 +17,7 @@ class Randomize():
 
         Returns: Grid class
         """
+        
         self.assign_battery()
         self.create_paths()
 
