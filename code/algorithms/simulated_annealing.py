@@ -40,9 +40,27 @@ class Simulated_annealing():
 
         # loop N times
         for i in range(self.iterations):
+            print(i)
 
+            # start checking after 100 iterations
+            if i > 201:
+                counter = 0
+
+                # check if last 20 outcomes are the same
+                for j in range(1, 200):
+                    if self.outcomes[-1] == self.outcomes[-(1+j)]:
+                        counter += 1
+                    else:
+                        break
+                        
+
+                # if last 20 were the same
+                if counter == 199:
+                    return old_state 
+                    
+                    
             # change temperature
-            self.temperature = self.start_temperature * (0.996 ** i)
+            self.temperature = self.start_temperature * (0.99999 ** i)
             # self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
 
             # make small mutations
@@ -52,11 +70,8 @@ class Simulated_annealing():
                 if output[0] == True:
                     new_state = output[1]
                     break
-
         
             # compare states and accept best state
-            print("Iteration: ")
-            print(i)
             old_state = self.check(old_state, new_state)
 
         return old_state 
@@ -76,8 +91,6 @@ class Simulated_annealing():
             
             grid = Randomize(grid_copy)
             succes, grid_copy = grid.assign_battery(grid_copy)
-
-            print(succes)
             
             if succes == True:
 
@@ -107,7 +120,7 @@ class Simulated_annealing():
             # shuffle connected houses in random order
             random.shuffle(battery.connected_houses)
 
-            for i in range(5):
+            for i in range(1):
                 # remove house from battery
                 house = battery.connected_houses.pop()
 

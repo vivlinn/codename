@@ -7,8 +7,8 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise
 
-ITERATIONS = 500
-TEMPERATURE = 1500
+ITERATIONS = 500000000
+TEMPERATURE = 3000
 
 if __name__ == "__main__":
     
