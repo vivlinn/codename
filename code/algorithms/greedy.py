@@ -10,6 +10,8 @@ class Greedy():
 
     def __init__(self, grid):
         self.grid = grid
+        self.matrix_x = np.zeros((50,50))
+        self.matrix_y = np.zeros((50,50))
 
     def run(self):
         """
@@ -61,9 +63,6 @@ class Greedy():
 
         Returns: Grid class 
         """
-               
-        matrix_x = np.zeros((50,50))
-        matrix_y = np.zeros((50,50))
 
         for house in list_houses:
             horizontal, vertical = self.define_direction(house)
@@ -232,10 +231,14 @@ class Greedy():
         return arr
         
     def track_shared(self, x, y, axis):
-        if axis == "horizontal":
-            matrix = matrix_x
+        if axis == "x":
+            matrix = self.matrix_x
         else:
-            matrix = matrix_y
+            matrix = self.matrix_y
+
+        if matrix[x][y] != 1:
+            matrix[x][y] = 1
+            
         return
 
     def lay_cables(self, house, horizontal, vertical):
@@ -274,7 +277,8 @@ class Greedy():
                 house.route.list_x.append(x)
                 house.route.list_y.append(y)
 
-                self.track_shared(self, x, y, horizontal)
+                # add cables to matrix
+                self.track_shared(self, x, y, "x")
 
         # loop till y-coordinate of cable matches y-coordinate of battery
         while house.route.list_y[-1] != house.route.battery.position_y:
@@ -295,7 +299,8 @@ class Greedy():
                 house.route.list_y.append(y)
                 house.route.list_x.append(x)
                 
-                self.track_shared(self, x, y, vertical)
+                # add cables to matrix
+                self.track_shared(self, x, y, "y")
 
         # set checking back to
         house.check = False
@@ -330,10 +335,12 @@ class Greedy():
                 if x + horizontal == battery.position_x and y == battery.position_y:
 
                     # Move one y-coordinate up or down, then one x coordinate left or right depending on direction towards right battery
-                    house.route.list_y.extend([y + vertical, y + vertical])
                     house.route.list_x.extend([x, x + horizontal])
-                    self.track_shared(self, x, (y + vertical), vertical)
-                    self.track_shared(self, (x + horizontal), ( y + vertical), horizontal)
+                    house.route.list_y.extend([y + vertical, y + vertical])
+
+                    # add cables to matrix
+                    self.track_shared(self, (x + horizontal), ( y + vertical), "x")
+                    self.track_shared(self, x, (y + vertical), "y")
                     return
             # bewegen over de y-as
             else:
@@ -344,8 +351,10 @@ class Greedy():
                     # Move one x coordinate left or right, then one y-coordinate up or down depending on direction towards right battery
                     house.route.list_x.extend([x + horizontal, x + horizontal])
                     house.route.list_y.extend([y, y + vertical])
-                    self.track_shared(self, (x + horizontal), y, horizontal)
-                    self.track_shared(self, (x + horizontal), ( y + vertical), vertical)
+
+                    # add cables to matrix
+                    self.track_shared(self, (x + horizontal), y, "x")
+                    self.track_shared(self, (x + horizontal), (y + vertical), "y")
                     return
 
         # append if bypasses is not needed
@@ -354,11 +363,15 @@ class Greedy():
             # changes x coordinate
             house.route.list_x.append(x + horizontal)
             house.route.list_y.append(y)
-            self.track_shared(self, (x + horizontal), y, horizontal)
+
+            # add cables to matrix
+            self.track_shared(self, (x + horizontal), y, "x")
         else:
 
             # changes y coordinate
             house.route.list_x.append(x)
             house.route.list_y.append(y + vertical)
-            self.track_shared(self, x, (y + vertical), vertical)
+            
+            # add cables to matrix
+            self.track_shared(self, x, (y + vertical), "y")
         return
