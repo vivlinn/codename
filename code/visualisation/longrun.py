@@ -4,7 +4,7 @@ def write_to_file(total_costs, state):
 
     _, y = state.plot()
     
-    data = json.load(open('output/longrun.json'))
+    data = json.load(open('output/longrun_hill.json'))
 
     # convert data to list if not
     if type(data) is dict:
@@ -16,7 +16,7 @@ def write_to_file(total_costs, state):
     data.append(dictionary)
 
     # write list to file
-    with open('output/longrun.json', 'w') as outfile:
+    with open('output/longrun_hill.json', 'w') as outfile:
         json.dump(data, outfile)
 
     return len(y)

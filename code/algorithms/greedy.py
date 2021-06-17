@@ -1,4 +1,5 @@
 from code.classes.route import Route
+import numpy as np
 
 class Greedy():
     """
@@ -60,6 +61,9 @@ class Greedy():
 
         Returns: Grid class 
         """
+               
+        matrix_x = np.zeros((50,50))
+        matrix_y = np.zeros((50,50))
 
         for house in list_houses:
             horizontal, vertical = self.define_direction(house)
@@ -227,12 +231,17 @@ class Greedy():
 
         return arr
         
+    def track_shared(self, x, y, axis):
+        if axis == "horizontal":
+            matrix = matrix_x
+        else:
+            matrix = matrix_y
+        return
 
     def lay_cables(self, house, horizontal, vertical):
         """
         Lays cables from house to battery and adds the coordinates to route class.
         Starts by going horizontal, then vertical until battery is reached.
-
         house: House class; 
         horizontal: int; 
         vertical: int
@@ -248,7 +257,7 @@ class Greedy():
     
         # loop till x-coordinate of cable matches x-coordinate of battery
         while house.route.list_x[-1] != house.route.battery.position_x:
-         
+
             # when house is not coupled to closest battery
             if house.check == True:
                 axis = "x"
@@ -259,8 +268,13 @@ class Greedy():
                 # re-calculate direction from path to battery
                 horizontal, vertical = self.define_direction(house)
             else:
-                house.route.list_x.append(house.route.list_x[-1] + horizontal)
-                house.route.list_y.append(house.route.list_y[-1])
+                x = house.route.list_x[-1] + horizontal
+                y = house.route.list_y[-1]
+                
+                house.route.list_x.append(x)
+                house.route.list_y.append(y)
+
+                self.track_shared(self, x, y, horizontal)
 
         # loop till y-coordinate of cable matches y-coordinate of battery
         while house.route.list_y[-1] != house.route.battery.position_y:
@@ -275,8 +289,13 @@ class Greedy():
                 # re-calculate direction from path to battery
                 horizontal, vertical = self.define_direction(house)
             else:
-                house.route.list_y.append(house.route.list_y[-1] + vertical)
-                house.route.list_x.append(house.route.list_x[-1])
+                y = house.route.list_y[-1] + vertical
+                x = house.route.list_x[-1]
+
+                house.route.list_y.append(y)
+                house.route.list_x.append(x)
+                
+                self.track_shared(self, x, y, vertical)
 
         # set checking back to
         house.check = False
@@ -313,6 +332,8 @@ class Greedy():
                     # Move one y-coordinate up or down, then one x coordinate left or right depending on direction towards right battery
                     house.route.list_y.extend([y + vertical, y + vertical])
                     house.route.list_x.extend([x, x + horizontal])
+                    self.track_shared(self, x, (y + vertical), vertical)
+                    self.track_shared(self, (x + horizontal), ( y + vertical), horizontal)
                     return
             # bewegen over de y-as
             else:
@@ -323,6 +344,8 @@ class Greedy():
                     # Move one x coordinate left or right, then one y-coordinate up or down depending on direction towards right battery
                     house.route.list_x.extend([x + horizontal, x + horizontal])
                     house.route.list_y.extend([y, y + vertical])
+                    self.track_shared(self, (x + horizontal), y, horizontal)
+                    self.track_shared(self, (x + horizontal), ( y + vertical), vertical)
                     return
 
         # append if bypasses is not needed
@@ -331,10 +354,11 @@ class Greedy():
             # changes x coordinate
             house.route.list_x.append(x + horizontal)
             house.route.list_y.append(y)
+            self.track_shared(self, (x + horizontal), y, horizontal)
         else:
 
             # changes y coordinate
             house.route.list_x.append(x)
             house.route.list_y.append(y + vertical)
-
+            self.track_shared(self, x, (y + vertical), vertical)
         return

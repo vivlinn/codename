@@ -9,10 +9,6 @@ def visualise_annealing(state):
 
 
     x, y = state.plot()
-    print(f"x: {x}")
-    print(f"y: {y}")
-        # x = axis[0]
-        # y = axis[1]
         
     fig, ax = plt.subplots()
 

@@ -11,7 +11,7 @@ from code.visualisation import costs, visualise, longrun
 
 ITERATIONS = 25000
 TEMPERATURE = 1000
-LONGRUN = 80
+LONGRUN = 60
 
 if __name__ == "__main__":
     
@@ -55,6 +55,8 @@ if __name__ == "__main__":
     total_time = 0
 
     for i in range(LONGRUN):
+        print(f"longrun: {i}")
+        
         """------------------------------ SIMULATED ANNEALING ----------------------------"""
          # Create grid with houses and batteries
         copy_grid = copy.deepcopy(grid)
@@ -90,41 +92,41 @@ if __name__ == "__main__":
     final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
 
     # save file as json
-    final_file = open("output/final.json", "w")
+    final_file = open("output/final_hill.json", "w")
     json.dump(final, final_file, indent = 6)    
 
     # close file
     final_file.close()
 
-    # """-----------------------------------OUTPUT--------------------------------------"""
-    # # Create output
-    # output = []
+    """-----------------------------------OUTPUT--------------------------------------"""
+    # Create output
+    output = []
 
-    # # append district name and total costs
-    # output.append({"district": argv[1], "costs-shared": total_costs})
-    # counter = 1
+    # append district name and total costs
+    output.append({"district": argv[1], "costs-shared": total_costs})
+    counter = 1
 
-    # # append attributes for batteries
-    # for battery in grid.batteries:
-    #     output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
+    # append attributes for batteries
+    for battery in grid.batteries:
+        output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
         
-    #     # append attributes for houses
-    #     for house in battery.connected_houses:
-    #         cables = []
+        # append attributes for houses
+        for house in battery.connected_houses:
+            cables = []
 
-    #         # append coordinates of route
-    #         for xi, yi in zip(house.route.list_x, house.route.list_y):
-    #             cables.append(f"{xi}, {yi}")
+            # append coordinates of route
+            for xi, yi in zip(house.route.list_x, house.route.list_y):
+                cables.append(f"{xi}, {yi}")
             
-    #         output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
+            output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
 
-    # # save file as json
-    # out_file = open("output/output.json", "w")
-    # json.dump(output, out_file, indent = 6)    
+    # save file as json
+    out_file = open("output/output.json", "w")
+    json.dump(output, out_file, indent = 6)    
 
-    # # close file
-    # out_file.close()
+    # close file
+    out_file.close()
 
 
-    # """--------------------------- GRID VISUALISATION ----------------------------------"""
-    # visualise.visualise_grid(grid, argv[1])
+    """--------------------------- GRID VISUALISATION ----------------------------------"""
+    visualise.visualise_grid(grid, argv[1])
