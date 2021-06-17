@@ -9,9 +9,9 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 25000
+ITERATIONS = 8000
 TEMPERATURE = 1000
-LONGRUN = 60
+LONGRUN = 1
 
 if __name__ == "__main__":
     
@@ -77,13 +77,16 @@ if __name__ == "__main__":
 
         """--------------------------------- GET COSTS -----------------------------------"""
         total_costs = costs.get_costs(copy_grid)
+        shared_costs = costs.shared_costs(copy_grid)
+        print(f"total costs: {total_costs}")
+        print(f"shared costs: {shared_costs}")
 
-        iterations = longrun.write_to_file(total_costs, state)
+        # iterations = longrun.write_to_file(total_costs, state)
 
-        if total_costs < lowest_costs:
-            lowest_costs = total_costs
-        if iterations < quickest_run:
-            quickest_run = iterations
+        # if total_costs < lowest_costs:
+        #     lowest_costs = total_costs
+        # if iterations < quickest_run:
+        #     quickest_run = iterations
 
     # Create output
     final = []
@@ -129,4 +132,4 @@ if __name__ == "__main__":
 
 
     """--------------------------- GRID VISUALISATION ----------------------------------"""
-    visualise.visualise_grid(grid, argv[1])
+    visualise.visualise_grid(copy_grid, argv[1])

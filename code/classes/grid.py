@@ -1,9 +1,8 @@
 import csv
+import numpy as np
 
 from .battery import Battery
 from .house import House
-from .route import Route
-
 
 
 class Grid():
@@ -12,7 +11,8 @@ class Grid():
         self.grid_height = 50
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
-        # self.cable = cable
+        self.matrix_x = np.zeros((51,51))
+        self.matrix_y = np.zeros((51,51))
         
     
     def load_battery(self, file_batteries):

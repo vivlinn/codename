@@ -2,21 +2,36 @@ def get_costs(grid):
     """
     This function takes a grid and calculates costs of cables and batteries and the total costs.
     """
-    costs = {}
     total_length = 0
-    batteries = []
 
     for house in grid.houses:
         length = len(house.route.list_x)
         total_length = total_length + length
 
-        if not house.route.battery in batteries:
-            batteries.append(house.route.battery)
+    cost_cables = total_length * 9
+    cost_batteries = len(grid.batteries) * 5000
+    total = cost_cables + cost_batteries
 
-    # Save the costs in a dictionary
-    costs["cables"] = total_length * 9
-    costs["batteries"] = len(batteries) * 5000
-    costs["total"] = costs["cables"] + costs["batteries"]
+    return total
 
-    return costs["total"]
+def shared_costs(grid):
+    total_x = 0
+    total_y = 0
+    
+    for i in grid.matrix_x:
+        for j in i:
+            total_x += j
+    
+    for i in grid.matrix_y:
+        for j in i:
+            total_y += j
+
+    print(grid.matrix_x)
+    print(grid.matrix_y)
+
+    cost_cables = (total_x + total_y) * 9
+    cost_batteries = len(grid.batteries) * 5000
+    total = cost_cables + cost_batteries
+    return int(total)
+
 
