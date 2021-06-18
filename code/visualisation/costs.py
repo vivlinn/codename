@@ -18,14 +18,18 @@ def shared_costs(grid):
     total_x = 0
     total_y = 0
     
-    for matrix in grid.matrices:
+    for matrix in grid.matrix:
         for i in matrix:
             for j in i:
+                print(j)
+                print(type(j))
+                print(type(total_x))
+
                 total_x += j
 
     test = [9,8,7,6,5,4,3,2,1,0]
 
-    for i in grid.matrices:
+    for i in grid.matrix:
         for j in i:
             for k in test:
                 print(j[k])

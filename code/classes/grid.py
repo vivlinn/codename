@@ -11,15 +11,15 @@ class Grid():
         self.grid_height = 50
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
-        self.matrices = self.matrices()
+        self.matrix = self.matrices()
 
     def matrices(self):
-        self.matrices = {}
-        self.matrices["left"] = np.zeros(11, 11)
-        self.matrices["right"] = np.zeros(11,11)
-        self.matrices["up"] = np.zeros(11,11)
-        self.matrices["down"] = np.zeros(11,11)
-        
+        self.matrix = {}
+        self.matrix["left"] = np.zeros([11, 11], dtype=int)
+        self.matrix["right"] = np.zeros([11, 11], dtype=int)
+        self.matrix["up"] = np.zeros([11, 11], dtype=int)
+        self.matrix["down"] = np.zeros([11, 11], dtype=int)
+        return self.matrix
     
     def load_battery(self, file_batteries):
         """
