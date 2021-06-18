@@ -42,11 +42,11 @@ class Simulated_annealing():
             print(i)
 
             # start checking after 100 iterations
-            if i > 501:
+            if i > 101:
                 counter = 0
 
                 # check if last 20 outcomes are the same
-                for j in range(1, 500):
+                for j in range(1, 100):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
@@ -54,7 +54,7 @@ class Simulated_annealing():
                         
 
                 # if last 20 were the same
-                if counter == 499:
+                if counter == 99:
                     return old_state 
                     
                     
