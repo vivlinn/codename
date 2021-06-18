@@ -70,21 +70,18 @@ class Simulated_annealing():
             while True:
                 output = self.mutate(old_state)
                 
-                
                 if output[0] == True:
                     new_state = output[1]
                     break
         
             # compare states and accept best state
-            old_state = self.check(old_state, new_state, ALGORITHM_HOUSES)
+            best = self.check(old_state, new_state, ALGORITHM_HOUSES)
 
-        return old_state
+        return best
             
 
 
     def optimal_cables(self, old_state):
-
-        copy_state = old_state
         self.outcomes = [] 
         
         # Get best house-state as start state
@@ -121,9 +118,9 @@ class Simulated_annealing():
             new_state = self.mutate_cables(old_state)            
             
             # compare states and accept best state
-            old_state = self.check(old_state, new_state, ALGORITHM_CABLES)
+            best = self.check(old_state, new_state, ALGORITHM_CABLES)
             
-        return old_state
+        return best
 
     def run(self):
         """
@@ -134,7 +131,7 @@ class Simulated_annealing():
 
         # Best result from running algorithm
         old_state = self.optimal_houses()
-        print(old_state)
+    
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
 
@@ -144,9 +141,7 @@ class Simulated_annealing():
                     
             
     def mutate_cables(self, old_state):
-        print(old_state)
         new_state = copy.deepcopy(old_state)
-        print(new_state)
 
         # MAGIC NUMBER
         houses = random.sample(new_state.houses, 3)
@@ -154,7 +149,6 @@ class Simulated_annealing():
         for house in houses:
             house.route.list_x = [house.position_x, ]
             house.route.list_y = [house.position_y, ]
-
 
             # set check at True again
             house.check = True
@@ -180,10 +174,7 @@ class Simulated_annealing():
         # empty matrices
         
         grid = Greedy(new_state)
-        new_state.matrices()
         new_state = grid.create_cables(new_state.houses)
-
-        
 
         return new_state
         
@@ -245,6 +236,7 @@ class Simulated_annealing():
 
 
         random.shuffle(houses_left)
+
         for house in houses_left:
 
             # loop till a battery is assigned to a house
