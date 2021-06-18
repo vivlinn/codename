@@ -15,26 +15,23 @@ def get_costs(grid):
     return total
 
 def shared_costs(grid):
-    total_x = 0
-    total_y = 0
-    
-    for matrix in grid.matrix:
-        for i in matrix:
+    total = 0
+
+    for direction in grid.matrix:
+        for i in grid.matrix[direction]:            
             for j in i:
-                print(j)
-                print(type(j))
-                print(type(total_x))
 
                 total_x += j
+    print(total)
 
-    test = [9,8,7,6,5,4,3,2,1,0]
+    # test = [9,8,7,6,5,4,3,2,1,0]
 
-    for i in grid.matrix:
-        for j in i:
-            for k in test:
-                print(j[k])
+    # for i in grid.matrix:
+    #     for j in i:
+    #         for k in test:
+    #             print(j[k])
 
-    cost_cables = (total_x + total_y) * 9
+    cost_cables = (total) * 9
     cost_batteries = len(grid.batteries) * 5000
     total = cost_cables + cost_batteries
     return int(total)
