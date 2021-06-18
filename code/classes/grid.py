@@ -14,11 +14,11 @@ class Grid():
         self.matrices = self.matrices()
 
     def matrices(self):
-        self.matrices.append(['matrix_right': np.zeros((11,11), 'matrix_left':])
-        self.matrix_right = np.zeros((11,11))
-        self.matrix_left = np.zeros((11,11))
-        self.matrix_up = np.zeros((11,11))
-        self.matrix_down = np.zeros((11,11))
+        self.matrices = {}
+        self.matrices["left"] = np.zeros(11, 11)
+        self.matrices["right"] = np.zeros(11,11)
+        self.matrices["up"] = np.zeros(11,11)
+        self.matrices["down"] = np.zeros(11,11)
         
     
     def load_battery(self, file_batteries):

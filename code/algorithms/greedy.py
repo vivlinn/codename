@@ -227,20 +227,20 @@ class Greedy():
 
         return arr
         
-    def track_shared(self, y, x, axis, direction):
+    def track_shared(self, x, y, axis, direction):
         if axis == "x":
             if direction == 1:
-                matrix = self.grid.matrix_right
+                matrix = self.matrices["right"]
             else:
-                matrix = self.grid.matrix_left
+                matrix = self.matrices["left"]
         else:
             if direction == 1:
-                matrix = self.grid.matrix_up
+                matrix = self.matrices["up"]
             else:
-                matrix = self.grid.matrix_down
+                matrix = self.matrices["down"]
 
-        if matrix[x][y] != 1:
-            matrix[x][y] = 1
+        if matrix[y][x] != 1:
+            matrix[y][x] = 1
             
         return
 
