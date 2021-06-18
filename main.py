@@ -9,9 +9,9 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 5000
+ITERATIONS = 25000
 TEMPERATURE = 1000
-LONGRUN = 1
+LONGRUN = 5
 
 if __name__ == "__main__":
     
@@ -81,12 +81,12 @@ if __name__ == "__main__":
         print(f"total costs: {total_costs}")
         print(f"shared costs: {shared_costs}")
 
-        # iterations = longrun.write_to_file(total_costs, state)
+        iterations = longrun.write_to_file(shared_costs, state)
 
-        # if total_costs < lowest_costs:
-        #     lowest_costs = total_costs
-        # if iterations < quickest_run:
-        #     quickest_run = iterations
+        if shared_costs < lowest_costs:
+            lowest_costs = shared_costs
+        if iterations < quickest_run:
+            quickest_run = iterations
 
     # Create output
     final = []

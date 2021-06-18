@@ -15,10 +15,11 @@ class Grid():
 
     def matrices(self):
         self.matrix = {}
-        self.matrix["left"] = np.zeros([11, 11], dtype=int)
-        self.matrix["right"] = np.zeros([11, 11], dtype=int)
-        self.matrix["up"] = np.zeros([11, 11], dtype=int)
-        self.matrix["down"] = np.zeros([11, 11], dtype=int)
+        directions = ["left", "right", "up", "down"]
+
+        for direction in directions:       
+            self.matrix[direction] = np.zeros([51, 51], dtype=int)
+        
         return self.matrix
     
     def load_battery(self, file_batteries):

@@ -24,7 +24,7 @@ class Simulated_annealing():
         self.grid = grid
         self.iterations = iterations
         self.start_temperature = start_temperature
-        self.temperature = 0
+        self.temperature = 1
         self.outcomes = []
 
     def run(self):
@@ -42,11 +42,11 @@ class Simulated_annealing():
             print(i)
 
             # start checking after 100 iterations
-            if i > 101:
+            if i > 1001:
                 counter = 0
 
                 # check if last 20 outcomes are the same
-                for j in range(1, 100):
+                for j in range(1, 1000):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
@@ -54,13 +54,13 @@ class Simulated_annealing():
                         
 
                 # if last 20 were the same
-                if counter == 99:
+                if counter == 999:
                     return old_state 
                     
                     
             # change temperature
             # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
-            self.temperature = self.start_temperature * (0.999 ** i)
+            # self.temperature = self.start_temperature * (0.999 ** i)
             # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
 
             # --------------------------------------------- LINEAIR ------------------------------------------------ #
@@ -185,8 +185,8 @@ class Simulated_annealing():
         Returns: Grid class
         """
 
-        costs_old = costs.get_costs(old_state)
-        costs_new = costs.get_costs(new_state)
+        costs_old = costs.shared_costs(old_state)
+        costs_new = costs.shared_costs(new_state)
 
         probability = 2 ** ((costs_old - costs_new) / self.temperature )
 
