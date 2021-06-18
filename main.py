@@ -9,9 +9,9 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 25000
+ITERATIONS = 500
 TEMPERATURE = 1000
-LONGRUN = 5
+LONGRUN = 1
 
 if __name__ == "__main__":
     
@@ -36,8 +36,7 @@ if __name__ == "__main__":
     
     # Create grid with houses and batteries
     grid = grid.Grid(file_batteries, file_houses)
-
-
+    
     """------------------------------------- RANDOM ----------------------------------"""
     # Doesn't work (too slow for 150 houses)
 

@@ -7,6 +7,11 @@ import copy
 import random
 
 
+SAME_RESULT_HOUSES = 1000
+SAME_RESULT_CABLES = 1000
+ALGORITHM_HOUSES = "HC"
+ALGORITHM_CABLES = "HC"
+
 class Simulated_annealing():
     """
     Simulated annealing algorithm.
@@ -27,12 +32,8 @@ class Simulated_annealing():
         self.temperature = 1
         self.outcomes = []
 
-    def run(self):
-        """
-        Main function; first creates a start state, then loops n times to create a new state(Keeps trying until a state is reached where all houses are coupled to batteries.), compares their costs and accepts the best state.
-
-        Returns: Grid class
-        """
+            
+    def optimal_houses(self):
 
         # Get random start state
         old_state = self.start_state()
@@ -42,22 +43,20 @@ class Simulated_annealing():
             print(i)
 
             # start checking after 100 iterations
-            if i > 1001:
+            if i > SAME_RESULT_HOUSES + 1:
                 counter = 0
 
                 # check if last 20 outcomes are the same
-                for j in range(1, 1000):
+                for j in range(1, SAME_RESULT_HOUSES):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
-                        break
-                        
+                        break      
 
-                # if last 20 were the same
-                if counter == 999:
-                    return old_state 
-                    
-                    
+                # if last N are the same
+                if counter == SAME_RESULT_HOUSES - 1:
+                    return old_state
+
             # change temperature
             # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
             # self.temperature = self.start_temperature * (0.999 ** i)
@@ -71,16 +70,123 @@ class Simulated_annealing():
             while True:
                 output = self.mutate(old_state)
                 
+                
                 if output[0] == True:
                     new_state = output[1]
                     break
         
             # compare states and accept best state
-            old_state = self.check(old_state, new_state)
+            old_state = self.check(old_state, new_state, ALGORITHM_HOUSES)
 
-        return old_state 
+        return old_state
             
 
+
+    def optimal_cables(self, old_state):
+
+        copy_state = old_state
+        self.outcomes = [] 
+        
+        # Get best house-state as start state
+
+        # loop N times
+        for i in range(self.iterations):
+            print(i)
+
+            # start checking after 100 iterations
+            if i > SAME_RESULT_CABLES + 1:
+                counter = 0
+
+                # check if last 20 outcomes are the same
+                for j in range(1, SAME_RESULT_CABLES):
+                    if self.outcomes[-1] == self.outcomes[-(1+j)]:
+                        counter += 1
+                    else:
+                        break      
+
+                # if last N are the same
+                if counter == SAME_RESULT_CABLES - 1:
+                    return old_state
+
+            # change temperature
+            # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+            self.temperature = self.start_temperature * (0.999 ** i)
+            # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
+
+            # --------------------------------------------- LINEAIR ------------------------------------------------ #
+            # self.temperature = self.start_temperature - (self.start_temperature / self.iterations) * i
+            # --------------------------------------------- LINEAIR ------------------------------------------------ #            
+
+            # make small mutations
+            new_state = self.mutate_cables(old_state)            
+            
+            # compare states and accept best state
+            old_state = self.check(old_state, new_state, ALGORITHM_CABLES)
+            
+        return old_state
+
+    def run(self):
+        """
+        Main function; first creates a start state, then loops n times to create a new state(Keeps trying until a state is reached where all houses are coupled to batteries.), compares their costs and accepts the best state.
+
+        Returns: Grid class
+        """
+
+        # Best result from running algorithm
+        old_state = self.optimal_houses()
+        print(old_state)
+        # Best result shared cables
+        best_state = self.optimal_cables(old_state)
+
+        print(costs.shared_costs(old_state))
+        print(costs.shared_costs(best_state))
+        return old_state 
+                    
+            
+    def mutate_cables(self, old_state):
+        print(old_state)
+        new_state = copy.deepcopy(old_state)
+        print(new_state)
+
+        # MAGIC NUMBER
+        houses = random.sample(new_state.houses, 3)
+    
+        for house in houses:
+            house.route.list_x = [house.position_x, ]
+            house.route.list_y = [house.position_y, ]
+
+
+            # set check at True again
+            house.check = True
+
+            while True:
+                if house.position_y <= house.route.battery.position_y:
+                    move = random.randint(1, 5)
+                else:
+                    move = random.randint(-5, -1)
+
+                if house.position_y + move > 0 and house.position_y + move < 50:
+                    break
+     
+            if move < 0:
+                tmp = -1
+            else:
+                tmp = 1
+                    
+            for i in range(abs(move - 1)):
+                house.route.list_x.append(house.position_x)
+                house.route.list_y.append(house.route.list_y[-1] + tmp)
+  
+        # empty matrices
+        
+        grid = Greedy(new_state)
+        new_state.matrices()
+        new_state = grid.create_cables(new_state.houses)
+
+        
+
+        return new_state
+        
     # START STATE
     def start_state(self):
         """
@@ -173,7 +279,7 @@ class Simulated_annealing():
         return [succes, new_state]
 
 
-    def check(self, old_state, new_state):
+    def check(self, old_state, new_state, type):
         """
         Calculates the cost of previous and new state. 
         Then calculates the acceptance probability incorporating temperature. 
@@ -188,7 +294,17 @@ class Simulated_annealing():
         costs_old = costs.shared_costs(old_state)
         costs_new = costs.shared_costs(new_state)
 
-        probability = 2 ** ((costs_old - costs_new) / self.temperature )
+        if costs_new < costs_old:
+
+            print(costs_old)
+            print(costs_new)
+            return
+
+        if type == "HC":
+            probability = 2 ** ((costs_old - costs_new))
+        else:
+            probability = 2 ** ((costs_old - costs_new) / self.temperature )
+
 
         if random.random() < probability:
             # accept new state
