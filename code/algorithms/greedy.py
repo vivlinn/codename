@@ -378,8 +378,3 @@ class Greedy():
             # add cables to matrix
             self.track_shared(x, (y + vertical), "y", vertical)
         return
-
-    def empty_matrices(self):
-        self.grid.matrices()
-
-        return self.grid

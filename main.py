@@ -9,7 +9,7 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 500
+ITERATIONS = 8000
 TEMPERATURE = 1000
 LONGRUN = 1
 

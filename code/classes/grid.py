@@ -21,6 +21,7 @@ class Grid():
             self.matrix[direction] = np.zeros([51, 51], dtype=int)
         
         return self.matrix
+
     
     def load_battery(self, file_batteries):
         """

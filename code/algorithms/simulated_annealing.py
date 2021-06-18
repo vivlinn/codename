@@ -10,7 +10,7 @@ import random
 SAME_RESULT_HOUSES = 1000
 SAME_RESULT_CABLES = 1000
 ALGORITHM_HOUSES = "HC"
-ALGORITHM_CABLES = "HC"
+ALGORITHM_CABLES = "SA"
 
 class Simulated_annealing():
     """
@@ -75,9 +75,9 @@ class Simulated_annealing():
                     break
         
             # compare states and accept best state
-            best = self.check(old_state, new_state, ALGORITHM_HOUSES)
+            old_state = self.check(old_state, new_state, ALGORITHM_HOUSES)
 
-        return best
+        return old_state
             
 
 
@@ -118,9 +118,9 @@ class Simulated_annealing():
             new_state = self.mutate_cables(old_state)            
             
             # compare states and accept best state
-            best = self.check(old_state, new_state, ALGORITHM_CABLES)
+            old_state = self.check(old_state, new_state, ALGORITHM_CABLES)
             
-        return best
+        return old_state
 
     def run(self):
         """
@@ -134,17 +134,15 @@ class Simulated_annealing():
     
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
-
-        print(costs.shared_costs(old_state))
-        print(costs.shared_costs(best_state))
-        return old_state 
+       
+        return best_state 
                     
             
     def mutate_cables(self, old_state):
         new_state = copy.deepcopy(old_state)
 
         # MAGIC NUMBER
-        houses = random.sample(new_state.houses, 3)
+        houses = random.sample(new_state.houses, 1)
     
         for house in houses:
             house.route.list_x = [house.position_x, ]
@@ -155,9 +153,9 @@ class Simulated_annealing():
 
             while True:
                 if house.position_y <= house.route.battery.position_y:
-                    move = random.randint(1, 5)
+                    move = random.randint(1, 3)
                 else:
-                    move = random.randint(-5, -1)
+                    move = random.randint(-3, -1)
 
                 if house.position_y + move > 0 and house.position_y + move < 50:
                     break
@@ -172,6 +170,7 @@ class Simulated_annealing():
                 house.route.list_y.append(house.route.list_y[-1] + tmp)
   
         # empty matrices
+        new_state.matrices()
         
         grid = Greedy(new_state)
         new_state = grid.create_cables(new_state.houses)
@@ -286,17 +285,10 @@ class Simulated_annealing():
         costs_old = costs.shared_costs(old_state)
         costs_new = costs.shared_costs(new_state)
 
-        if costs_new < costs_old:
-
-            print(costs_old)
-            print(costs_new)
-            return
-
         if type == "HC":
             probability = 2 ** ((costs_old - costs_new))
         else:
             probability = 2 ** ((costs_old - costs_new) / self.temperature )
-
 
         if random.random() < probability:
             # accept new state
