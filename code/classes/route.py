@@ -5,6 +5,9 @@ class Route():
         self.list_y = [y,]
 
     def length(self):
+        """
+        Calculate costs of cable route.
+        """
         price = len(self.list_x) * 9
         return price
         
