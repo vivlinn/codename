@@ -21,14 +21,16 @@ def shared_costs(grid):
     total = 0
 
     for direction in grid.matrix:
-        for i in grid.matrix[direction]:            
+        for i in grid.matrix[direction]:       
             for j in i:
 
-                total += j
+                if j > 0:
+                    total += 1
 
     cost_cables = (total) * CABLE_PRICE
     cost_batteries = len(grid.batteries) * BATTERY_PRICE
     total = cost_cables + cost_batteries
+
     return int(total)
 
 

@@ -57,7 +57,7 @@ if __name__ == "__main__":
         print(f"longrun: {i}")
         
         """------------------------------ SIMULATED ANNEALING ----------------------------"""
-         # Create grid with houses and batteries
+        # copy grid
         copy_grid = copy.deepcopy(grid)
         state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
 
@@ -76,7 +76,8 @@ if __name__ == "__main__":
 
         """--------------------------------- GET COSTS -----------------------------------"""
         total_costs = costs.get_costs(copy_grid)
-        shared_costs = costs.shared_costs(copy_grid)
+        shared_costs = costs.shared_costs(copy_grid) 
+
         print(f"total costs: {total_costs}")
         print(f"shared costs: {shared_costs}")
 
@@ -109,7 +110,7 @@ if __name__ == "__main__":
     counter = 1
 
     # append attributes for batteries
-    for battery in grid.batteries:
+    for battery in copy_grid.batteries:
         output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
         
         # append attributes for houses

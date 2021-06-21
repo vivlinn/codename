@@ -32,7 +32,21 @@ class Simulated_annealing():
         self.temperature = 1
         self.outcomes = []
 
-            
+    def run(self):
+        """
+        Main function; first creates a start state, then loops n times to create a new state(Keeps trying until a state is reached where all houses are coupled to batteries.), compares their costs and accepts the best state.
+
+        Returns: Grid class
+        """
+
+        # Best result from running algorithm
+        old_state = self.optimal_houses()
+    
+        # Best result shared cables
+        best_state = self.optimal_cables(old_state)
+       
+        return best_state  
+
     def optimal_houses(self):
 
         # Get random start state
@@ -80,7 +94,6 @@ class Simulated_annealing():
         return old_state
             
 
-
     def optimal_cables(self, old_state):
         self.outcomes = [] 
         
@@ -122,61 +135,6 @@ class Simulated_annealing():
             
         return old_state
 
-    def run(self):
-        """
-        Main function; first creates a start state, then loops n times to create a new state(Keeps trying until a state is reached where all houses are coupled to batteries.), compares their costs and accepts the best state.
-
-        Returns: Grid class
-        """
-
-        # Best result from running algorithm
-        old_state = self.optimal_houses()
-    
-        # Best result shared cables
-        best_state = self.optimal_cables(old_state)
-       
-        return best_state 
-                    
-            
-    def mutate_cables(self, old_state):
-        new_state = copy.deepcopy(old_state)
-
-        # MAGIC NUMBER
-        houses = random.sample(new_state.houses, 1)
-    
-        for house in houses:
-            house.route.list_x = [house.position_x, ]
-            house.route.list_y = [house.position_y, ]
-
-            # set check at True again
-            house.check = True
-
-            while True:
-                if house.position_y <= house.route.battery.position_y:
-                    move = random.randint(1, 3)
-                else:
-                    move = random.randint(-3, -1)
-
-                if house.position_y + move > 0 and house.position_y + move < 50:
-                    break
-     
-            if move < 0:
-                tmp = -1
-            else:
-                tmp = 1
-                    
-            for i in range(abs(move - 1)):
-                house.route.list_x.append(house.position_x)
-                house.route.list_y.append(house.route.list_y[-1] + tmp)
-  
-        # empty matrices
-        new_state.matrices()
-        
-        grid = Greedy(new_state)
-        new_state = grid.create_cables(new_state.houses)
-
-        return new_state
-        
     # START STATE
     def start_state(self):
         """
@@ -199,7 +157,7 @@ class Simulated_annealing():
 
                 break
 
-        return start_state
+        return start_state  
 
     def mutate(self, old_state):
         """
@@ -226,6 +184,9 @@ class Simulated_annealing():
 
                 # set check at True again
                 house.check = True
+
+                grid = Greedy(new_state)
+                new_state = grid.remove_shared(house)
 
                 # update remaining capacity
                 battery.remaining += house.max_output
@@ -267,7 +228,50 @@ class Simulated_annealing():
         grid = Greedy(new_state)
         new_state = grid.create_cables(new_path)
     
-        return [succes, new_state]
+        return [succes, new_state]  
+            
+    def mutate_cables(self, old_state):
+        new_state = copy.deepcopy(old_state)
+        
+        # MAGIC NUMBER
+        house_sample = random.sample(new_state.houses, 1)
+        
+        grid = Greedy(new_state)
+
+        for house in house_sample:
+            
+            grid.remove_shared(house)
+            
+            house.route.list_x = [house.position_x, ]
+            house.route.list_y = [house.position_y, ]
+
+            # set check at True again
+            house.check = True
+
+            while True:
+                if house.position_y < house.route.battery.position_y:
+                    move = random.randint(1, 5)
+                    tmp = 1
+                elif house.position_y > house.route.battery.position_y:
+                    move = random.randint(-5, -1)
+                    tmp = -1
+                else: 
+                    move = 0
+                    break
+
+                if house.position_y + move > 0 and house.position_y + move < 50:
+                    break
+                
+            for i in range(abs(move)):
+                house.route.list_x.append(house.position_x)
+                house.route.list_y.append(house.route.list_y[-1] + tmp)
+                
+                grid.track_shared(house.position_x, house.route.list_y[-1], "y", tmp)
+    
+        new_state = grid.create_cables(house_sample)
+       
+        return new_state
+        
 
 
     def check(self, old_state, new_state, type):
@@ -308,6 +312,7 @@ class Simulated_annealing():
 
         """
         y_axis = self.outcomes
+        
         x_axis = range(0,len(self.outcomes))
 
         return x_axis, y_axis

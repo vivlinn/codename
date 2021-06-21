@@ -7,7 +7,6 @@ def visualise_annealing(state):
     This function takes a state and a district number and creates a visualisation plot using the coordinates of objects.
     """
 
-
     x, y = state.plot()
         
     fig, ax = plt.subplots()

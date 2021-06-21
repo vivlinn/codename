@@ -228,21 +228,44 @@ class Greedy():
         return arr
         
     def track_shared(self, x, y, axis, direction):
+
         if axis == "x":
-            if direction == 1:
+            if direction > 0:
                 matrix = self.grid.matrix["right"]
             else:
                 matrix = self.grid.matrix["left"]
+                
         else:
-            if direction == 1:
+            if direction > 0:
                 matrix = self.grid.matrix["up"]
             else:
                 matrix = self.grid.matrix["down"]
 
-        if matrix[y][x] != 1:
-            matrix[y][x] = 1
-            
-        return
+        matrix[x][y] += 1
+    
+        return self.grid
+
+    def remove_shared(self, house):
+   
+        for i in range(1, len(house.route.list_x)):
+    
+            if house.route.list_x[-i] == house.route.list_x[-(i+1)]:
+
+                if house.route.list_y[-i] > house.route.list_y[-(i+1)]:
+                    matrix = self.grid.matrix["up"]
+                else: 
+                    matrix = self.grid.matrix["down"]
+                  
+            else:
+
+                if house.route.list_x[-i] > house.route.list_x[-(i+1)]:
+                    matrix = self.grid.matrix["right"]  
+                else:
+                    matrix = self.grid.matrix["left"]
+    
+            matrix[house.route.list_x[-(i)]][house.route.list_y[-(i)]] -= 1
+
+        return self.grid
 
     def lay_cables(self, house, horizontal, vertical):
         """

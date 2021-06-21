@@ -56,8 +56,6 @@ class Grid():
                 
                 id += 1
 
-            
-        # houses[0].route = Route(0, [34, 33, 32, 32, 32, 31, 31, 30, 29], [47, 47, 47, 46, 45, 45, 44, 44, 44])
         return houses
 
 
