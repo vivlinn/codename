@@ -7,8 +7,8 @@ import copy
 import random
 
 
-SAME_RESULT_HOUSES = 1000
-SAME_RESULT_CABLES = 1000
+SAME_RESULT_HOUSES = 20000
+SAME_RESULT_CABLES = 8000
 ALGORITHM_HOUSES = "HC"
 ALGORITHM_CABLES = "SA"
 
@@ -45,7 +45,7 @@ class Simulated_annealing():
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
        
-        return best_state  
+        return best_state
 
     def optimal_houses(self):
 
@@ -121,6 +121,7 @@ class Simulated_annealing():
             # change temperature
             # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
             self.temperature = self.start_temperature * (0.999 ** i)
+            
             # ------------------------------------------- EXPONENTIAL ---------------------------------------------- #
 
             # --------------------------------------------- LINEAIR ------------------------------------------------ #
@@ -249,30 +250,36 @@ class Simulated_annealing():
             house.check = True
 
             while True:
-                if house.position_y < house.route.battery.position_y:
-                    move = random.randint(1, 5)
-                    tmp = 1
-                elif house.position_y > house.route.battery.position_y:
-                    move = random.randint(-5, -1)
-                    tmp = -1
-                else: 
-                    move = 0
-                    break
+                move = random.randint(-15, 15)
+                # # if house.position_y < house.route.battery.position_y:
+                #     move = random.randint(1, 3) 
+                #     tmp = 1
+                # elif house.position_y > house.route.battery.position_y:
+                #     move = random.randint(-3, -1)
+                #     tmp = -1
+                # else: 
+                #     move = 0
+                #     break
 
                 if house.position_y + move > 0 and house.position_y + move < 50:
                     break
-                
-            for i in range(abs(move)):
-                house.route.list_x.append(house.position_x)
-                house.route.list_y.append(house.route.list_y[-1] + tmp)
-                
-                grid.track_shared(house.position_x, house.route.list_y[-1], "y", tmp)
-    
+
+            if move < 0:
+                tmp = -1 
+            else:
+                tmp = 1
+
+            if move != 0:
+                for i in range(abs(move)):
+                    house.route.list_x.append(house.position_x)
+                    house.route.list_y.append(house.route.list_y[-1] + tmp)
+                    
+                    grid.track_shared(house.position_x, house.route.list_y[-1], "y", tmp)
+        
         new_state = grid.create_cables(house_sample)
        
         return new_state
         
-
 
     def check(self, old_state, new_state, type):
         """
@@ -289,7 +296,7 @@ class Simulated_annealing():
         costs_old = costs.shared_costs(old_state)
         costs_new = costs.shared_costs(new_state)
 
-        if type == "HC":
+        if type == "HC" or self.temperature < 0.1:
             probability = 2 ** ((costs_old - costs_new))
         else:
             probability = 2 ** ((costs_old - costs_new) / self.temperature )
