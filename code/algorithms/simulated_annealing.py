@@ -41,11 +41,12 @@ class Simulated_annealing():
 
         # Best result from running algorithm
         old_state = self.optimal_houses()
+        tmp = old_state
     
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
        
-        return best_state  
+        return best_state, tmp  
 
     def optimal_houses(self):
 
@@ -250,10 +251,11 @@ class Simulated_annealing():
 
             while True:
                 if house.position_y < house.route.battery.position_y:
-                    move = random.randint(1, 5)
+                    # MAGIC NUMBER
+                    move = random.randint(1, 10)
                     tmp = 1
                 elif house.position_y > house.route.battery.position_y:
-                    move = random.randint(-5, -1)
+                    move = random.randint(-10, -1)
                     tmp = -1
                 else: 
                     move = 0
@@ -289,10 +291,13 @@ class Simulated_annealing():
         costs_old = costs.shared_costs(old_state)
         costs_new = costs.shared_costs(new_state)
 
-        if type == "HC":
+        if type == "HC" or self.temperature < 0.1:
             probability = 2 ** ((costs_old - costs_new))
         else:
             probability = 2 ** ((costs_old - costs_new) / self.temperature )
+            print()
+            print(self.temperature)
+            print(probability)
 
         if random.random() < probability:
             # accept new state
