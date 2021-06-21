@@ -58,8 +58,6 @@ class Grid():
 
         return houses
 
-
-
     def get_height(self):
         return self.grid_height
 
