@@ -14,6 +14,9 @@ class Grid():
         self.matrix = self.matrices()
 
     def matrices(self):
+        """
+        Create matrices to track shared cables.
+        """
         self.matrix = {}
         directions = ["left", "right", "up", "down"]
 

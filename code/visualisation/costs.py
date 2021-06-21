@@ -18,6 +18,9 @@ def get_costs(grid):
     return total
 
 def shared_costs(grid):
+    """
+    This function takes a grid and calculates costs of shared cables and batteries and the total costs.
+    """
     total = 0
 
     for direction in grid.matrix:
