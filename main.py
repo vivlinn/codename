@@ -9,9 +9,9 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 50000
+ITERATIONS = 60000
 TEMPERATURE = 1000
-LONGRUN = 1
+LONGRUN = 50
 
 if __name__ == "__main__":
     
