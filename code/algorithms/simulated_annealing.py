@@ -42,10 +42,10 @@ class Simulated_annealing():
         # Best result from running algorithm
         old_state = self.optimal_houses()
     
-        # Best result shared cables
-        best_state = self.optimal_cables(old_state)
+        # # Best result shared cables
+        # best_state = self.optimal_cables(old_state)
        
-        return best_state
+        return old_state
 
     def optimal_houses(self):
 
