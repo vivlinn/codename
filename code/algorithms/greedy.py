@@ -1,7 +1,7 @@
 """
-Created by CodeName
+Created by CodeName.
 
-This file contains a greedy algorithm
+This file contains a greedy algorithm.
 
 
 """

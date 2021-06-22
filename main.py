@@ -5,15 +5,20 @@ import time
 from sys import argv
 from os import path
 
-from code.algorithms import randomize, greedy, simulated_annealing
+from code.algorithms import randomize, greedy, hillclimber, simulatedannealing
 from code.classes import grid
 from code.visualisation import visualise, longrun
 
 
 SIZE_GRID = 10
-ITERATIONS = 1000
+ITERATIONS = 5000
 TEMPERATURE = 5
 LONGRUN = 1
+SAME_RESULT_HOUSES = 1000
+SAME_RESULT_CABLES = 1000
+ALGORITHM_HOUSES = "HC"
+ALGORITHM_CABLES = "SA"
+COOLING_SCHEME = "exp"
 
 if __name__ == "__main__":
     
@@ -50,7 +55,7 @@ if __name__ == "__main__":
     # state = greedy.Greedy(grid)    
     # grid = state.run()
 
-    """------------------------------------- LOOP ----------------------------------"""
+    """------------------------------------- LOOP ------------------------------------"""
     lowest_costs = 99999999999999999999999
     quickest_run = 99999999999999999999999
     total_time = 0
@@ -58,11 +63,13 @@ if __name__ == "__main__":
     for i in range(LONGRUN):
         print(f"longrun: {i}")
         
-        """------------------------------ SIMULATED ANNEALING ----------------------------"""
+        """------------------------------- HILL CLIMBER-------------------------------"""
+
+        """------------------------------ SIMULATED ANNEALING ------------------------"""
         # Copy grid
         copy_grid = copy.deepcopy(grid)
-        state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
-
+        state = hillclimber.Hill_Climber(copy_grid, ITERATIONS, TEMPERATURE, COOLING_SCHEME, ALGORITHM_HOUSES, ALGORITHM_CABLES) 
+        
         # Start time
         start = time.time()
 
@@ -76,7 +83,7 @@ if __name__ == "__main__":
         # Measure running time, add time of 1 run to total run time
         total_time = total_time + (end - start)
 
-        """--------------------------------- GET COSTS -----------------------------------"""
+        """--------------------------------- GET COSTS --------------------------------"""
         total_costs = copy_grid.get_costs()
         shared_costs = copy_grid.shared_costs() 
 
@@ -103,7 +110,7 @@ if __name__ == "__main__":
     # Close file
     final_file.close()
 
-    """-----------------------------------OUTPUT--------------------------------------"""
+    """-----------------------------------OUTPUT----------------------------------------"""
     # Create output
     output = []
 
