@@ -29,7 +29,7 @@ class Greedy():
         """
 
         self.create_connections()
-        self.create_cables()
+        self.create_cables(self.grid.houses)
 
         return self.grid
 
@@ -48,7 +48,7 @@ class Greedy():
         for house in sorted_output:
 
             # assign closest battery to house
-            self.assign_battery(self.grid, house)
+            self.assign_battery(house)
 
         houses_left = self.remove_excessive_houses()
 
@@ -77,7 +77,7 @@ class Greedy():
         
         return self.grid
 
-    def rearrange_houses(houses_left, sorted_batteries):
+    def rearrange_houses(self, houses_left, sorted_batteries):
         """
         takes all the houses without battery and tries to append them to a battery if possible
         
@@ -176,7 +176,7 @@ class Greedy():
         battery_chosen = None
 
         # save shortest distance in best, start with longest possible
-        best = self.grid.grid_height + self.grid.grid_width + 2
+        best = self.grid.get_height() + self.grid.get_width() + 2
 
         # loop through batteries
         for battery in self.grid.batteries:
@@ -205,7 +205,7 @@ class Greedy():
         return
 
     # https://www.programiz.com/python-programming/methods/list/sort
-    def bubbleSort(arr, object):
+    def bubbleSort(self, arr, object):
         """
         sorts a list using bubble sort
 

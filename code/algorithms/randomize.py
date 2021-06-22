@@ -31,7 +31,7 @@ class Randomize():
 
         return self.grid
 
-    def assign_battery(self, grid):
+    def assign_battery(self):
         """
         Assigns houses to batteries randomly. If succesful for all then creates a route class for each house. 
         If not succesful; exits function
@@ -39,32 +39,32 @@ class Randomize():
         Returns: Bool
         """
 
-        # loop through all houses in grid
-        for house in grid.houses:
+        # Loop through all houses in grid
+        for house in self.grid.houses:
 
-            # loop till a battery is assigned to a house
+            # Loop till a battery is assigned to a house
             while True:
 
                 succes = False
-                for battery in grid.batteries:
+                for battery in self.grid.batteries:
                     if house.max_output <= battery.remaining:
                         succes = True
                         break
                 
-                # assign random battery to the house
-                battery_chosen = random.choice(grid.batteries)
+                # Assign random battery to the house
+                battery_chosen = random.choice(self.grid.batteries)
 
-                # check if battery has capacity for the house
+                # Check if battery has capacity for the house
                 if battery_chosen.remaining >= house.max_output:
 
-                    # update remaining battery_chosen capacity
+                    # Update remaining battery_chosen capacity
                     battery_chosen.remaining = battery_chosen.remaining - house.max_output
                     break
                 
                 if succes == False:
                     return succes, self.grid
 
-            # add route object to the house
+            # Add route object to the house
             battery_chosen.connected_houses.append(house)
             house.route = Route(battery_chosen, house.position_x, house.position_y)
 
@@ -82,7 +82,7 @@ class Randomize():
 
         for house in self.grid.houses:
 
-            # save non-chosen batteries in list
+            # Save non-chosen batteries in list
             other_batteries = []
             for battery in self.grid.batteries:
                 if battery != house.route.battery:
@@ -95,67 +95,67 @@ class Randomize():
 
                 if direction == 'x':
                     direction_x = random.choice([-1, 1])
-                    xtest = house.route.list_x[-1] + direction_x
-                    ytest = house.route.list_y[-1]
+                    x = house.route.list_x[-1] + direction_x
+                    y = house.route.list_y[-1]
                     
-                    # check if still inside grid
-                    if xtest >= 0 and xtest <= self.grid.grid_width:
+                    # Check if x-coordinate is within grid
+                    if x >= 0 and x <= self.grid.grid_width:
                         
-                        # check if route has started
+                        # Check if route has started
                         if len(house.route.list_x) > 1:
-                            # set previous cordinate as previous
+                            # Set previous coordinate as previous
                             previous = house.route.list_x[-2]
                         
-                            # check if new coordinate was not the previous coordinate
-                            if previous == xtest:
-                                # choose new coordinate
+                            # Check if new coordinate was not the previous coordinate
+                            if previous == x:
+                                # Choose new coordinate
                                 continue
 
                         valid = True
-                        # check if new coordinated don't lead to other batteries
+                        # Check if new coordinated don't lead to other batteries
                         for battery in other_batteries:
                             
-                            # bypass other batteries 
-                            if xtest == battery.position_x and ytest == battery.position_y:
+                            # Bypass other batteries 
+                            if x == battery.position_x and y == battery.position_y:
                                 valid = False
                         
                         if valid == True:
-                            # append new coordinate to route list
-                            house.route.list_x.append(xtest)
+                            # Append new coordinate to route list
+                            house.route.list_x.append(x)
 
-                            # append unchanged y coordinate to route list
-                            house.route.list_y.append(ytest)
+                            # Append unchanged y coordinate to route list
+                            house.route.list_y.append(y)
 
 
                 else:
                     direction_y = random.choice([-1, 1])
-                    ytest = house.route.list_y[-1] + direction_y
-                    xtest = house.route.list_x[-1]
+                    y = house.route.list_y[-1] + direction_y
+                    x = house.route.list_x[-1]
 
-                    if ytest>= 0 and ytest <= self.grid.grid_height:
+                    if y>= 0 and y <= self.grid.height:
 
-                        # check if route has started
+                        # Check if route has started
                         if len(house.route.list_y) > 1:
-                            # set previous cordinate as previous
+                            # Set previous cordinate as previous
                             previous = house.route.list_y[-2]
 
-                            # check if new coordinate was not the previous coordinate
-                            if previous == ytest:
-                                # choose new coordinate
+                            # Check if new coordinate was not the previous coordinate
+                            if previous == y:
+                                # Choose new coordinate
                                 continue
 
                         valid = True
-                        # check if new coordinated don't lead to other batteries
+                        # Check if new coordinated don't lead to other batteries
                         for battery in other_batteries:
                             
-                            # bypass other batteries 
-                            if xtest == battery.position_x and ytest == battery.position_y:
+                            # Bypass other batteries 
+                            if x == battery.position_x and y == battery.position_y:
                                 valid = False
                         
                         if valid == True:
                             # append new coordinate to route list
-                            house.route.list_x.append(xtest)
+                            house.route.list_x.append(x)
 
-                            # append unchanged y coordinate to route list
-                            house.route.list_y.append(ytest)
+                            # Append unchanged y coordinate to route list
+                            house.route.list_y.append(y)
         return

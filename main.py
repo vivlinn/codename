@@ -16,7 +16,7 @@ TEMPERATURE = 5
 LONGRUN = 1
 SAME_RESULT_HOUSES = 1000
 SAME_RESULT_CABLES = 1000
-ALGORITHM_HOUSES = "HC"
+ALGORITHM_HOUSES = "SA"
 ALGORITHM_CABLES = "SA"
 COOLING_SCHEME = "exp"
 
@@ -43,73 +43,89 @@ if __name__ == "__main__":
     
     # Create grid with houses and batteries
     grid = grid.Grid(SIZE_GRID, file_batteries, file_houses)
+
+    """ ------------------------------------ INPUT -----------------------------------"""
+    information = f"Choose an algorithm: \n for Random, type RA \n for Greedy, type GR \n for Hillclimber, type HC \n for Simulated Annealing, type SA \n "
+    algorithm = input(f"{information} :")
     
     """------------------------------------- RANDOM ----------------------------------"""
-    # Doesn't work (too slow for 150 houses)
-
-    # state = randomize.Randomize(grid)
-    # grid = state.run()
+    if algorithm == "RA":
+        if argv[1] != "test":
+            print("Doesn't work, too slow for 150 houses. Choose test district")
+            exit(3)
+            
+        state = randomize.Randomize(grid)
+        grid = state.run()
     
     
     """------------------------------------- GREEDY ----------------------------------"""
-    # state = greedy.Greedy(grid)    
-    # grid = state.run()
+    if algorithm == "GR":
+        
+        state = greedy.Greedy(grid)    
+        copy_grid = state.run()
+    
 
     """------------------------------------- LOOP ------------------------------------"""
     lowest_costs = 99999999999999999999999
     quickest_run = 99999999999999999999999
     total_time = 0
 
-    for i in range(LONGRUN):
-        print(f"longrun: {i}")
+    if algorithm == "HC" or algorithm == "SA":
+        algorithm_houses = "HC"
+    """------------------------------- HILL CLIMBER-------------------------------"""
+
+    """------------------------------ SIMULATED ANNEALING ------------------------"""
         
-        """------------------------------- HILL CLIMBER-------------------------------"""
-
-        """------------------------------ SIMULATED ANNEALING ------------------------"""
-        # Copy grid
-        copy_grid = copy.deepcopy(grid)
-        state = hillclimber.Hill_Climber(copy_grid, ITERATIONS, TEMPERATURE, COOLING_SCHEME, ALGORITHM_HOUSES, ALGORITHM_CABLES) 
+        for i in range(LONGRUN):
+            print(f"longrun: {i}")
+            
         
-        # Start time
-        start = time.time()
+            # Copy grid
+            copy_grid = copy.deepcopy(grid)
+            state = hillclimber.Hill_Climber(copy_grid, ITERATIONS, TEMPERATURE, COOLING_SCHEME, ALGORITHM_HOUSES, ALGORITHM_CABLES) 
+            
+            # Start time
+            start = time.time()
 
-        copy_grid = state.run()
-         
-        # End time 
-        end = time.time()
+            copy_grid = state.run()
+            
+            # End time 
+            end = time.time()
 
-        visualise.visualise_annealing(state)
+            visualise.visualise_annealing(state)
 
-        # Measure running time, add time of 1 run to total run time
-        total_time = total_time + (end - start)
+            # Measure running time, add time of 1 run to total run time
+            total_time = total_time + (end - start)
 
-        """--------------------------------- GET COSTS --------------------------------"""
+            """--------------------------------- GET COSTS --------------------------------"""
+            total_costs = copy_grid.get_costs()
+            shared_costs = copy_grid.shared_costs() 
+
+            print(f"without shared cables costs: {total_costs}")
+            print(f"shared cables costs (mutate cables): {shared_costs}")
+
+            iterations = longrun.write_to_file(shared_costs, state)
+
+            if shared_costs < lowest_costs:
+                lowest_costs = shared_costs
+            if iterations < quickest_run:
+                quickest_run = iterations
+
+        # Create output
+        final = []
+
+        # Append district name and total costs
+        final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
+
+        # Save file as json
+        final_file = open("output/final_hill.json", "w")
+        json.dump(final, final_file, indent = 6)    
+
+        # Close file
+        final_file.close()
+    else:
         total_costs = copy_grid.get_costs()
-        shared_costs = copy_grid.shared_costs() 
-
-        print(f"without shared cables costs: {total_costs}")
-        print(f"shared cables costs (mutate cables): {shared_costs}")
-
-        iterations = longrun.write_to_file(shared_costs, state)
-
-        if shared_costs < lowest_costs:
-            lowest_costs = shared_costs
-        if iterations < quickest_run:
-            quickest_run = iterations
-
-    # Create output
-    final = []
-
-    # Append district name and total costs
-    final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
-
-    # Save file as json
-    final_file = open("output/final_hill.json", "w")
-    json.dump(final, final_file, indent = 6)    
-
-    # Close file
-    final_file.close()
-
+        
     """-----------------------------------OUTPUT----------------------------------------"""
     # Create output
     output = []
