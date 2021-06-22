@@ -45,7 +45,7 @@ if __name__ == "__main__":
     grid = grid.Grid(SIZE_GRID, file_batteries, file_houses)
 
     """ ------------------------------------ INPUT -----------------------------------"""
-    information = f"Choose an algorithm: \n for Random, type RA \n for Greedy, type GR \n for Hillclimber, type HC \n for Simulated Annealing, type SA \n "
+    information = f"Choose an algorithm: \n for Random, type RA \n for Greedy, type GR \n for Hillclimber, type HC \n for Simulated Annealing, type SA \n"
     algorithm = input(f"{information} :")
     
     """------------------------------------- RANDOM ----------------------------------"""
@@ -65,24 +65,37 @@ if __name__ == "__main__":
         copy_grid = state.run()
     
 
-    """------------------------------------- LOOP ------------------------------------"""
-    lowest_costs = 99999999999999999999999
-    quickest_run = 99999999999999999999999
-    total_time = 0
+    """---------------------- HILL CLIMBER / SIMULATED ANNEALING ------------------------"""
 
     if algorithm == "HC" or algorithm == "SA":
-        algorithm_houses = "HC"
-    """------------------------------- HILL CLIMBER-------------------------------"""
 
-    """------------------------------ SIMULATED ANNEALING ------------------------"""
-        
-        for i in range(LONGRUN):
+        """---------------------------------- LONGRUN ---------------------------------"""
+        iterations = input("Choose a number of iterations:")
+        longrun = input("Choose a number of runs:")
+
+        lowest_costs = 99999999999999999999999
+        quickest_run = 99999999999999999999999
+        total_time = 0
+
+        if algorithm == "HC":
+            algorithm_houses = "HC"
+            algorithm_cables = "HC"
+            temperature = 1
+            cooling_scheme = "none"
+        else:
+            algorithm_houses = input("Choose an algorithm for pairing houses and batteries (HC/SA): ")
+            algorithm_cables = input("Choose an algorithm for creating routes (HC/SA): ")
+            temperature = input("Choose a start temperature: ")
+            cooling_scheme = input(f"Choose a cooling scheme \nFor exponential, type exp \nfor linear, type lin\n :--")
+
+        for i in range(longrun):
             print(f"longrun: {i}")
-            
         
             # Copy grid
             copy_grid = copy.deepcopy(grid)
-            state = hillclimber.Hill_Climber(copy_grid, ITERATIONS, TEMPERATURE, COOLING_SCHEME, ALGORITHM_HOUSES, ALGORITHM_CABLES) 
+
+            # call hillclimber algorithm
+            state = hillclimber.Hill_Climber(copy_grid, iterations, temperature, COOLING_SCHEME, algorithm_houses, algorithm_cables) 
             
             # Start time
             start = time.time()
@@ -91,8 +104,6 @@ if __name__ == "__main__":
             
             # End time 
             end = time.time()
-
-            visualise.visualise_annealing(state)
 
             # Measure running time, add time of 1 run to total run time
             total_time = total_time + (end - start)
@@ -156,5 +167,10 @@ if __name__ == "__main__":
     out_file.close()
 
 
-    """--------------------------- GRID VISUALISATION ----------------------------------"""
+    """--------------------------- VISUALISATION ----------------------------------"""
     visualise.visualise_grid(copy_grid, argv[1])
+
+    if algoritm == "SA":
+
+        # plot annealing progress
+        visualise.visualise_annealing(state)
