@@ -10,15 +10,8 @@ from code.classes import grid
 from code.visualisation import visualise, longrun
 
 
+ALGORITHMS = ["RA", "GR", "HC", "SA"]
 SIZE_GRID = 10
-ITERATIONS = 5000
-TEMPERATURE = 5
-LONGRUN = 1
-SAME_RESULT_HOUSES = 1000
-SAME_RESULT_CABLES = 1000
-ALGORITHM_HOUSES = "SA"
-ALGORITHM_CABLES = "SA"
-COOLING_SCHEME = "exp"
 
 if __name__ == "__main__":
     
@@ -28,7 +21,7 @@ if __name__ == "__main__":
         exit(1)
 
 
-    """---------------------------------- SETUP GRID ----------------------------------"""
+    #---------------------------------- SETUP GRID ----------------------------------#
     
     # Check if folder for district exists
     if not path.exists(f"data/district_{argv[1]}"):
@@ -44,34 +37,38 @@ if __name__ == "__main__":
     # Create grid with houses and batteries
     grid = grid.Grid(SIZE_GRID, file_batteries, file_houses)
 
-    """ ------------------------------------ INPUT -----------------------------------"""
-    information = f"Choose an algorithm: \n for Random, type RA \n for Greedy, type GR \n for Hillclimber, type HC \n for Simulated Annealing, type SA \n"
-    algorithm = input(f"{information} :")
+    # ------------------------------------ INPUT -----------------------------------#
+    information = f"Choose an algorithm: \n- for Random, type RA \n- for Greedy, type GR \n- for Hillclimber, type HC \n- for Simulated Annealing, type SA \n"
     
-    """------------------------------------- RANDOM ----------------------------------"""
+    while True:
+        algorithm = input(f"{information} : ")
+
+        if algorithm in ALGORITHMS:
+            break
+    
+    #------------------------------------- RANDOM ----------------------------------#
     if algorithm == "RA":
         if argv[1] != "test":
             print("Doesn't work, too slow for 150 houses. Choose test district")
             exit(3)
             
         state = randomize.Randomize(grid)
-        grid = state.run()
+        copy_grid = state.run()
     
     
-    """------------------------------------- GREEDY ----------------------------------"""
+    #------------------------------------- GREEDY ----------------------------------#
     if algorithm == "GR":
         
         state = greedy.Greedy(grid)    
         copy_grid = state.run()
     
 
-    """---------------------- HILL CLIMBER / SIMULATED ANNEALING ------------------------"""
+    #---------------------- HILL CLIMBER / SIMULATED ANNEALING ------------------------#
 
     if algorithm == "HC" or algorithm == "SA":
 
-        """---------------------------------- LONGRUN ---------------------------------"""
-        iterations = input("Choose a number of iterations:")
-        longrun = input("Choose a number of runs:")
+        iterations = int(input("Choose a number of iterations: "))
+        long_run = int(input("Choose a number of runs: "))
 
         lowest_costs = 99999999999999999999999
         quickest_run = 99999999999999999999999
@@ -85,17 +82,17 @@ if __name__ == "__main__":
         else:
             algorithm_houses = input("Choose an algorithm for pairing houses and batteries (HC/SA): ")
             algorithm_cables = input("Choose an algorithm for creating routes (HC/SA): ")
-            temperature = input("Choose a start temperature: ")
-            cooling_scheme = input(f"Choose a cooling scheme \nFor exponential, type exp \nfor linear, type lin\n :--")
+            temperature = int(input("Choose a start temperature: "))
+            cooling_scheme = input(f"Choose a cooling scheme \n- for exponential, type exp \n- for linear, type lin\n : ")
 
-        for i in range(longrun):
+        for i in range(long_run):
             print(f"longrun: {i}")
         
             # Copy grid
             copy_grid = copy.deepcopy(grid)
 
             # call hillclimber algorithm
-            state = hillclimber.Hill_Climber(copy_grid, iterations, temperature, COOLING_SCHEME, algorithm_houses, algorithm_cables) 
+            state = hillclimber.Hill_Climber(copy_grid, iterations, temperature, cooling_scheme, algorithm_houses, algorithm_cables) 
             
             # Start time
             start = time.time()
@@ -170,7 +167,7 @@ if __name__ == "__main__":
     """--------------------------- VISUALISATION ----------------------------------"""
     visualise.visualise_grid(copy_grid, argv[1])
 
-    if algoritm == "SA":
+    if algorithm == "SA":
 
         # plot annealing progress
         visualise.visualise_annealing(state)

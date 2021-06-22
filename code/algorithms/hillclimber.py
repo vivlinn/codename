@@ -6,13 +6,14 @@ This file contains a hill climber algorithm.
 """
 
 from code.algorithms.simulatedannealing import Simulated_Annealing
-from main import ITERATIONS, SIZE_GRID, SAME_RESULT_HOUSES, SAME_RESULT_CABLES, ALGORITHM_HOUSES, ALGORITHM_CABLES
 from .greedy import Greedy
 from .randomize import Randomize
 from code.classes.route import Route
 
 import copy
 import random
+
+SAME_RESULT_STOP = 1000
 
 class Hill_Climber():
     """
@@ -67,18 +68,18 @@ class Hill_Climber():
             print(i)
 
             # Start checking after N iterations
-            if i > SAME_RESULT_HOUSES + 1:
+            if i > SAME_RESULT_STOP + 1:
                 counter = 0
 
                 # Check if the last N outcomes are repeated
-                for j in range(1, SAME_RESULT_HOUSES):
+                for j in range(1, SAME_RESULT_STOP):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
                         break      
 
                 # Save state in case the N outcomes are repeated
-                if counter == SAME_RESULT_HOUSES - 1:
+                if counter == SAME_RESULT_STOP - 1:
                     return old_state
             
             # Update temperature if needed
@@ -117,18 +118,18 @@ class Hill_Climber():
             print(i)
 
             # Start checking after N iterations
-            if i > SAME_RESULT_CABLES + 1:
+            if i > SAME_RESULT_STOP + 1:
                 counter = 0
 
                 # Check if last N outcomes are repeated
-                for j in range(1, SAME_RESULT_CABLES):
+                for j in range(1, SAME_RESULT_STOP):
                     if self.outcomes[-1] == self.outcomes[-(1+j)]:
                         counter += 1
                     else:
                         break      
 
                 # Save state in case the N outcomes are repeated
-                if counter == SAME_RESULT_CABLES - 1:
+                if counter == SAME_RESULT_STOP - 1:
                     return old_state
 
             # Change temperature in case

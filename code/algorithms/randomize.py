@@ -99,7 +99,7 @@ class Randomize():
                     y = house.route.list_y[-1]
                     
                     # Check if x-coordinate is within grid
-                    if x >= 0 and x <= self.grid.grid_width:
+                    if x >= 0 and x <= self.grid.get_width():
                         
                         # Check if route has started
                         if len(house.route.list_x) > 1:
@@ -132,7 +132,7 @@ class Randomize():
                     y = house.route.list_y[-1] + direction_y
                     x = house.route.list_x[-1]
 
-                    if y>= 0 and y <= self.grid.height:
+                    if y>= 0 and y <= self.grid.get_height():
 
                         # Check if route has started
                         if len(house.route.list_y) > 1:

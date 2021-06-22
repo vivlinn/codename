@@ -6,18 +6,27 @@ Green energy is the energy of the future, and self-producing is today's fashion.
 To solve this problem, we will look at three residential areas, each containing 150 houses and 5 batteries. The houses are build with solar panels with a maximum output, while the batteries have a maximum capacity. The challenge is to connect houses with batteries using cables while keeping the costs as low as possible. 
 
 
-
-**Part 1** 
-
-For the first variant, the following requirements are set in place:
+### Part 1   
+The first part consists of the following requirements:
 - Batteries cannot be connected to each to each other.
 - A house cannot be connected to multiple batteries.
-- Each house is connected to a battery through their own cable.
+- Each house is connected to a battery through their own unique cable.
 -  Multiple cables are allowed to run over the same gridsegments. However, each house will still have their own unique cable, and this will not reduce costs.
 
 
+1. For the first district, connect all houses to a battery. The maximum capacity of the houses cannot exceed the capacity of the batteries.
+2. Calculate the total costs of cables and batteries for each district. Try to find the best possible configuration of cables. 
 
-## installments
+### Part 2
+Houses can now share the same cable leading to a battery.
+
+1. For each district, connect all houses to a battery. The maximum capacity of the houses cannot exceed the capacity of the batteries.
+2. Optimalise the SmartGrid for all three districts.
+
+
+
+## Installements
+
 ```bash
 python -m pip install -U pip
 ```
@@ -26,10 +35,16 @@ python -m pip install -U pip
 python -m pip install -U matplotlib
 ```
 
+**Get Started**
 
-
-
-
+### Structure
+The following list describes the main folders and files for this project, and where to find them:
+- **/code**: contains all code of this project.
+    - **/code/algorithms**:
+    - **/code/classes**:
+    - **/code/visualisation**:
+- **/data**: contains all data files needed to run this project.
+- **/output**: after running this project, all results will appear in this folder.
 
 
 # Files
