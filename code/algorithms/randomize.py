@@ -1,3 +1,11 @@
+"""
+Created by CodeName.
+
+This file contains a random algorithm.
+
+
+"""
+
 import random
 from code.classes.route import Route
 

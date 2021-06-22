@@ -12,6 +12,9 @@ import numpy as np
 from .battery import Battery
 from .house import House
 
+CABLE_PRICE = 9
+BATTERY_PRICE = 5000
+
 
 class Grid():
     def __init__(self, size, file_batteries, file_houses):
@@ -128,3 +131,39 @@ class Grid():
             matrix[house.route.list_x[-(i)]][house.route.list_y[-(i)]] -= 1
 
         return self
+
+    def get_costs(self):
+        """
+        This function takes a grid and calculates costs of cables and batteries and the total costs.
+        """
+
+        total_length = 0
+
+        for house in self.houses:
+            length = len(house.route.list_x) - 1
+            total_length = total_length + length
+
+        cost_cables = total_length * CABLE_PRICE
+        cost_batteries = len(self.batteries) * BATTERY_PRICE
+        total = cost_cables + cost_batteries
+
+        return total
+
+    def shared_costs(self):
+        """
+        This function takes a grid and calculates costs of shared cables and batteries and the total costs.
+        """
+        total = 0
+
+        for direction in self.matrix:
+            for i in self.matrix[direction]:       
+                for j in i:
+
+                    if j > 0:
+                        total += 1
+
+        cost_cables = (total) * CABLE_PRICE
+        cost_batteries = len(self.batteries) * BATTERY_PRICE
+        total = cost_cables + cost_batteries
+
+        return int(total)

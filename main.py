@@ -7,7 +7,7 @@ from os import path
 
 from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
-from code.visualisation import costs, visualise, longrun
+from code.visualisation import visualise, longrun
 
 
 SIZE_GRID = 10
@@ -77,8 +77,8 @@ if __name__ == "__main__":
         total_time = total_time + (end - start)
 
         """--------------------------------- GET COSTS -----------------------------------"""
-        total_costs = costs.get_costs(copy_grid)
-        shared_costs = costs.shared_costs(copy_grid) 
+        total_costs = copy_grid.get_costs()
+        shared_costs = copy_grid.shared_costs() 
 
         print(f"without shared cables costs: {total_costs}")
         print(f"shared cables costs (mutate cables): {shared_costs}")

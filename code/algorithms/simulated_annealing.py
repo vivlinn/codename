@@ -2,7 +2,6 @@ from main import SIZE_GRID
 from .greedy import Greedy
 from .randomize import Randomize
 from code.classes.route import Route
-from code.visualisation import costs
 
 import copy
 import random
@@ -285,16 +284,13 @@ class Simulated_annealing():
         Returns: Grid class
         """
 
-        costs_old = costs.shared_costs(old_state)
-        costs_new = costs.shared_costs(new_state)
+        costs_old = old_state.shared_costs()
+        costs_new = new_state.shared_costs()
 
         if type == "HC" or self.temperature < 0.1:
             probability = 2 ** ((costs_old - costs_new))
         else:
             probability = 2 ** ((costs_old - costs_new) / self.temperature )
-            print()
-            print(self.temperature)
-            print(probability)
 
         if random.random() < probability:
             # accept new state

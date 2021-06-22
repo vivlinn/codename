@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
+
 def visualise_annealing(state):
     """
     This function takes a state and a district number and creates a visualisation plot using the coordinates of objects.
@@ -18,6 +19,7 @@ def visualise_annealing(state):
 
     ax.plot(x, y)
     plt.savefig(f"output/annealing.png")
+
 
 def visualise_grid(grid, number):
     """
@@ -61,15 +63,6 @@ def visualise_grid(grid, number):
         y_route = house.route.list_y
         ax.plot(x_route, y_route)
                 
-    
-    # test = grid.houses[0]
-
-    # x_route = test.route.list_x
-    # y_route = test.route.list_y
-    # ax.plot(x_route, y_route)
-            
-    # for cable in grid.cables:
-    #     plt.plot(cable.start, cable.end)
 
     # Plot coordinates as crosses and dots
     ax.plot(x_house, y_house, "rx")

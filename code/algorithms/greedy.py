@@ -1,6 +1,8 @@
 """
 Created by CodeName
 
+This file contains a greedy algorithm
+
 
 """
 
