@@ -25,7 +25,7 @@ Houses can now share the same cable leading to a battery.
 
 
 
-## Installements
+## Installments
 
 ```bash
 python -m pip install -U pip
@@ -35,21 +35,23 @@ python -m pip install -U pip
 python -m pip install -U matplotlib
 ```
 
-**Get Started**
+### Get Started
+To run this project, choose a district. See the following example to run the project for district 1. The number changes depending on chosen district.
+```bash
+python3 main.py 1
+```
+This will provide a command line interface where options will be available.
 
-### Structure
+### Structure  
 The following list describes the main folders and files for this project, and where to find them:
 - **/code**: contains all code of this project.
-    - **/code/algorithms**:
-    - **/code/classes**:
-    - **/code/visualisation**:
+    - **/code/algorithms**: contains the code for the algorithms.
+    - **/code/classes**: contains the code for the classes
+    - **/code/visualisation**: contains the code for visualising the results.
 - **/data**: contains all data files needed to run this project.
-- **/output**: after running this project, all results will appear in this folder.
+- **/output**: contains results after running this project.
 
 
-# Files
-
-The project consists of :
 
 **Main**
 
