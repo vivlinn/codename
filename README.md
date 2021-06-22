@@ -25,7 +25,10 @@ Houses can now share the same cable leading to a battery.
 
 
 
-## Installments
+## Get Started
+
+### Requirements
+This code is written entirely in Python 3.8.5. The following packages are needed to run the project succesfully.
 
 ```bash
 python -m pip install -U pip
@@ -35,12 +38,12 @@ python -m pip install -U pip
 python -m pip install -U matplotlib
 ```
 
-### Get Started
+### Run Project
 To run this project, choose a district. See the following example to run the project for district 1. The number changes depending on chosen district.
 ```bash
 python3 main.py 1
 ```
-This will provide a command line interface where options will be available.
+This will provide a command line interface where instructions will be available.
 
 ### Structure  
 The following list describes the main folders and files for this project, and where to find them:
@@ -49,9 +52,10 @@ The following list describes the main folders and files for this project, and wh
     - **/code/classes**: contains the code for the classes
     - **/code/visualisation**: contains the code for visualising the results.
 - **/data**: contains all data files needed to run this project.
+- **/doc**: contains the images needed to create some of the visualisations
 - **/output**: contains results after running this project.
 
-
+## Algorithms
 
 **Main**
 
@@ -78,3 +82,8 @@ The following list describes the main folders and files for this project, and wh
 **Doc**
 - battery image
 - house image
+
+## Authors
+- Vincent Engelhard
+- Lotte Kaatee
+- Pamela Sneekes
