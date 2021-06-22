@@ -1,3 +1,9 @@
+"""
+Created by CodeName
+
+
+"""
+
 from code.classes.route import Route
 
 class Greedy():
@@ -53,10 +59,10 @@ class Greedy():
 
     def create_cables(self, list_houses):
         """
-        loops through houses in list. 
+        Loops through houses in list. 
         checks direction towards the coupled battery and lays cables between.
 
-        list_houses: list
+        List_houses: list
 
         Returns: Grid class 
         """
@@ -68,7 +74,6 @@ class Greedy():
             self.lay_cables(house, horizontal, vertical)
         
         return self.grid
-
 
     def rearrange_houses(houses_left, sorted_batteries):
         """
@@ -131,7 +136,6 @@ class Greedy():
                 
             return houses_left
 
-
     def define_direction(self, house):
         """
         Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
@@ -156,7 +160,6 @@ class Greedy():
             vertical = 1
 
         return horizontal, vertical
-
 
     def assign_battery(self, house):
         """
@@ -227,45 +230,6 @@ class Greedy():
 
         return arr
         
-    def track_shared(self, x, y, axis, direction):
-
-        if axis == "x":
-            if direction > 0:
-                matrix = self.grid.matrix["right"]
-            else:
-                matrix = self.grid.matrix["left"]
-                
-        else:
-            if direction > 0:
-                matrix = self.grid.matrix["up"]
-            else:
-                matrix = self.grid.matrix["down"]
-
-        matrix[x][y] += 1
-    
-        return self.grid
-
-    def remove_shared(self, house):
-   
-        for i in range(1, len(house.route.list_x)):
-    
-            if house.route.list_x[-i] == house.route.list_x[-(i+1)]:
-
-                if house.route.list_y[-i] > house.route.list_y[-(i+1)]:
-                    matrix = self.grid.matrix["up"]
-                else: 
-                    matrix = self.grid.matrix["down"]
-                  
-            else:
-
-                if house.route.list_x[-i] > house.route.list_x[-(i+1)]:
-                    matrix = self.grid.matrix["right"]  
-                else:
-                    matrix = self.grid.matrix["left"]
-    
-            matrix[house.route.list_x[-(i)]][house.route.list_y[-(i)]] -= 1
-
-        return self.grid
 
     def lay_cables(self, house, horizontal, vertical):
         """
@@ -304,7 +268,7 @@ class Greedy():
                 house.route.list_y.append(y)
 
                 # add cables to matrix
-                self.track_shared(x, y, "x", horizontal)
+                self.grid.track_shared(x, y, "x", horizontal)
 
         # loop till y-coordinate of cable matches y-coordinate of battery
         while house.route.list_y[-1] != house.route.battery.position_y:
@@ -326,7 +290,7 @@ class Greedy():
                 house.route.list_x.append(x)
                 
                 # add cables to matrix
-                self.track_shared(x, y, "y", vertical)
+                self.grid.track_shared(x, y, "y", vertical)
 
         # set checking back to
         house.check = False
@@ -348,11 +312,9 @@ class Greedy():
         x = house.route.list_x[-1]
         y = house.route.list_y[-1]
   
-        # print(house)
 
         # check if new coordinated don't lead to other batteries
         for battery in other_batteries:
-            # print(battery)
               
             # if path is moving across the x-axis
             if axis == "x":
@@ -365,8 +327,8 @@ class Greedy():
                     house.route.list_y.extend([y + vertical, y + vertical])
 
                     # add cables to matrix
-                    self.track_shared((x + horizontal), ( y + vertical), "x", horizontal)
-                    self.track_shared(x, (y + vertical), "y", vertical)
+                    self.grid.track_shared((x + horizontal), ( y + vertical), "x", horizontal)
+                    self.gtrack_shared(x, (y + vertical), "y", vertical)
                     return
             # bewegen over de y-as
             else:
@@ -379,8 +341,8 @@ class Greedy():
                     house.route.list_y.extend([y, y + vertical])
 
                     # add cables to matrix
-                    self.track_shared((x + horizontal), y, "x", horizontal)
-                    self.track_shared((x + horizontal), (y + vertical), "y", vertical)
+                    self.grid.track_shared((x + horizontal), y, "x", horizontal)
+                    self.grid.track_shared((x + horizontal), (y + vertical), "y", vertical)
                     return
 
         # append if bypasses is not needed
@@ -391,7 +353,7 @@ class Greedy():
             house.route.list_y.append(y)
 
             # add cables to matrix
-            self.track_shared((x + horizontal), y, "x", horizontal)
+            self.grid.track_shared((x + horizontal), y, "x", horizontal)
         else:
 
             # changes y coordinate
@@ -399,5 +361,5 @@ class Greedy():
             house.route.list_y.append(y + vertical)
             
             # add cables to matrix
-            self.track_shared(x, (y + vertical), "y", vertical)
+            self.grid.track_shared(x, (y + vertical), "y", vertical)
         return

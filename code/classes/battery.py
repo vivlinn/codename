@@ -1,6 +1,16 @@
+"""
+Created by CodeName.
+
+This file contains a Battery class.
+
+Imported in Grid class.
+
+Has coordinates, capacity and a list of House classes.
+"""
+
+
 class Battery():
-    def __init__(self, id, position_x, position_y, capacity):
-        self.id = id
+    def __init__(self, position_x, position_y, capacity):
         self.capacity = capacity
         self.remaining = self.capacity
         self.position_x = position_x
@@ -11,6 +21,7 @@ class Battery():
         """
         Connect house to battery.
         """
+
         self.connected_houses.append(house)
         return
     
@@ -18,6 +29,7 @@ class Battery():
         """
         Disconnect house from battery.
         """
+
         house = self.connected_houses.pop()
         return house
 
@@ -25,6 +37,7 @@ class Battery():
         """
         Change remaining capacity of battery.
         """
+
         if change == "add":
             self.capacity += house.max_output
         else:

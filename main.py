@@ -9,9 +9,11 @@ from code.algorithms import randomize, greedy, simulated_annealing
 from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
-ITERATIONS = 60000
-TEMPERATURE = 1000
-LONGRUN = 50
+
+SIZE_GRID = 50
+ITERATIONS = 1000
+TEMPERATURE = 200
+LONGRUN = 1
 
 if __name__ == "__main__":
     
@@ -35,7 +37,7 @@ if __name__ == "__main__":
     file_houses = f"data/district_{number}/district-{number}_houses.csv"
     
     # Create grid with houses and batteries
-    grid = grid.Grid(file_batteries, file_houses)
+    grid = grid.Grid(SIZE_GRID, file_batteries, file_houses)
     
     """------------------------------------- RANDOM ----------------------------------"""
     # Doesn't work (too slow for 150 houses)

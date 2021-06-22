@@ -1,3 +1,11 @@
+"""
+Created by CodeName.
+
+This file contains a Grid class.
+Has a specified size, list of battery classes, list of house classes, and 4 matrices.
+"""
+
+
 import csv
 import numpy as np
 
@@ -6,9 +14,9 @@ from .house import House
 
 
 class Grid():
-    def __init__(self, file_batteries, file_houses):
-        self.grid_width = 50
-        self.grid_height = 50
+    def __init__(self, size, file_batteries, file_houses):
+        self.grid_width = size
+        self.grid_height = size
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
         self.matrix = self.matrices()
@@ -17,11 +25,12 @@ class Grid():
         """
         Create matrices to track shared cables.
         """
+
         self.matrix = {}
         directions = ["left", "right", "up", "down"]
 
         for direction in directions:       
-            self.matrix[direction] = np.zeros([51, 51], dtype=int)
+            self.matrix[direction] = np.zeros([(self.grid_width+1), (self.grid_height+1)], dtype=int)
         
         return self.matrix
 
@@ -30,18 +39,18 @@ class Grid():
         """
         Load all the batteries into the graph.
         """
+
         batteries = []
         with open(file_batteries, 'r') as in_file:
             reader = csv.DictReader(in_file)
 
-            id = 0
             for row in reader:
                 positie = row['positie']
                 position_x_y = positie.split(",")
                 position_x = int(position_x_y[0])
                 position_y = int(position_x_y[1])
-                batteries.append(Battery(id, position_x, position_y, float(row['capaciteit'])))
-                id += 1
+                
+                batteries.append(Battery(position_x, position_y, float(row['capaciteit'])))
 
         return batteries
 
@@ -49,20 +58,67 @@ class Grid():
         """
         Load all the houses into the graph.
         """
+
         houses = []
         with open(file_houses, 'r') as in_file:
             reader = csv.DictReader(in_file)
 
-            id = 0
             for row in reader:
-                houses.append(House(id, float(row['maxoutput']), int(row['x']), int(row['y'])))
+                houses.append(House(float(row['maxoutput']), int(row['x']), int(row['y'])))
                 
-                id += 1
 
         return houses
 
     def get_height(self):
+        """
+        Get height of the grid.
+        """
+
         return self.grid_height
 
     def get_width(self):
+        """
+        Get weigth of the grid.
+        """
+
         return self.grid_width
+
+    def track_shared(self, x, y, axis, direction):
+
+        if axis == "x":
+            if direction > 0:
+                matrix = self.matrix["right"]
+            else:
+                matrix = self.matrix["left"]
+                
+        else:
+            if direction > 0:
+                matrix = self.matrix["up"]
+            else:
+                matrix = self.matrix["down"]
+
+        matrix[x][y] += 1
+    
+        return self
+
+    def remove_shared(self, house):
+   
+        for i in range(1, len(house.route.list_x)):
+    
+            if house.route.list_x[-i] == house.route.list_x[-(i+1)]:
+
+                if house.route.list_y[-i] > house.route.list_y[-(i+1)]:
+                    matrix = self.matrix["up"]
+                else: 
+                    matrix = self.matrix["down"]
+                  
+            else:
+
+                if house.route.list_x[-i] > house.route.list_x[-(i+1)]:
+                    matrix = self.matrix["right"]  
+                else:
+                    matrix = self.matrix["left"]
+    
+            matrix[house.route.list_x[-(i)]][house.route.list_y[-(i)]] -= 1
+
+        return self
