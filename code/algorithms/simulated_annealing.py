@@ -41,6 +41,7 @@ class Simulated_annealing():
 
         # Best result from running algorithm
         old_state = self.optimal_houses()
+        tmp = old_state
     
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
@@ -291,6 +292,9 @@ class Simulated_annealing():
             probability = 2 ** ((costs_old - costs_new))
         else:
             probability = 2 ** ((costs_old - costs_new) / self.temperature )
+            print()
+            print(self.temperature)
+            print(probability)
 
         if random.random() < probability:
             # accept new state

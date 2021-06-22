@@ -66,7 +66,7 @@ if __name__ == "__main__":
         # start time
         start = time.time()
 
-        copy_grid = state.run()
+        copy_grid, tmp = state.run()
          
         # end time 
         end = time.time()
@@ -77,11 +77,11 @@ if __name__ == "__main__":
         total_time = total_time + (end - start)
 
         """--------------------------------- GET COSTS -----------------------------------"""
-        total_costs = costs.get_costs(copy_grid)
+        total_costs = costs.shared_costs(tmp)
         shared_costs = costs.shared_costs(copy_grid) 
 
-        print(f"total costs: {total_costs}")
-        print(f"shared costs: {shared_costs}")
+        print(f"without shared cables costs: {total_costs}")
+        print(f"shared cables costs (mutate cables): {shared_costs}")
 
         iterations = longrun.write_to_file(shared_costs, state)
 
