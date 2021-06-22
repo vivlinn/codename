@@ -10,9 +10,9 @@ from code.classes import grid
 from code.visualisation import costs, visualise, longrun
 
 
-SIZE_GRID = 50
+SIZE_GRID = 10
 ITERATIONS = 1000
-TEMPERATURE = 200
+TEMPERATURE = 5
 LONGRUN = 1
 
 if __name__ == "__main__":
@@ -59,25 +59,25 @@ if __name__ == "__main__":
         print(f"longrun: {i}")
         
         """------------------------------ SIMULATED ANNEALING ----------------------------"""
-        # copy grid
+        # Copy grid
         copy_grid = copy.deepcopy(grid)
         state = simulated_annealing.Simulated_annealing(copy_grid, ITERATIONS, TEMPERATURE)
 
-        # start time
+        # Start time
         start = time.time()
 
-        copy_grid, tmp = state.run()
+        copy_grid = state.run()
          
-        # end time 
+        # End time 
         end = time.time()
 
         visualise.visualise_annealing(state)
 
-        # add time of 1 run to total run time
+        # Measure running time, add time of 1 run to total run time
         total_time = total_time + (end - start)
 
         """--------------------------------- GET COSTS -----------------------------------"""
-        total_costs = costs.shared_costs(tmp)
+        total_costs = costs.get_costs(copy_grid)
         shared_costs = costs.shared_costs(copy_grid) 
 
         print(f"without shared cables costs: {total_costs}")
@@ -93,43 +93,43 @@ if __name__ == "__main__":
     # Create output
     final = []
 
-    # append district name and total costs
+    # Append district name and total costs
     final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
 
-    # save file as json
+    # Save file as json
     final_file = open("output/final_hill.json", "w")
     json.dump(final, final_file, indent = 6)    
 
-    # close file
+    # Close file
     final_file.close()
 
     """-----------------------------------OUTPUT--------------------------------------"""
     # Create output
     output = []
 
-    # append district name and total costs
+    # Append district name and total costs
     output.append({"district": argv[1], "costs-shared": total_costs})
     counter = 1
 
-    # append attributes for batteries
+    # Append attributes for batteries
     for battery in copy_grid.batteries:
         output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
         
-        # append attributes for houses
+        # Append attributes for houses
         for house in battery.connected_houses:
             cables = []
 
-            # append coordinates of route
+            # Append coordinates of route
             for xi, yi in zip(house.route.list_x, house.route.list_y):
                 cables.append(f"{xi}, {yi}")
             
             output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
 
-    # save file as json
+    # Save file as json
     out_file = open("output/output.json", "w")
     json.dump(output, out_file, indent = 6)    
 
-    # close file
+    # Close file
     out_file.close()
 
 

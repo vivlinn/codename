@@ -2,7 +2,7 @@ import json
 
 def write_to_file(total_costs, state):
     """
-    Saves results from longrunning the algorithms and saves in a file.
+    Saves results from longrunning the algorithms in a file.
     """
 
     _, y = state.plot()

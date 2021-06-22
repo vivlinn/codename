@@ -15,8 +15,8 @@ from .house import House
 
 class Grid():
     def __init__(self, size, file_batteries, file_houses):
-        self.grid_width = size
-        self.grid_height = size
+        self.width = size
+        self.height = size
         self.batteries = self.load_battery(file_batteries)
         self.houses = self.load_houses(file_houses)
         self.matrix = self.matrices()
@@ -30,7 +30,7 @@ class Grid():
         directions = ["left", "right", "up", "down"]
 
         for direction in directions:       
-            self.matrix[direction] = np.zeros([(self.grid_width+1), (self.grid_height+1)], dtype=int)
+            self.matrix[direction] = np.zeros([11, 11], dtype=int)
         
         return self.matrix
 
@@ -74,16 +74,19 @@ class Grid():
         Get height of the grid.
         """
 
-        return self.grid_height
+        return self.height
 
     def get_width(self):
         """
         Get weigth of the grid.
         """
 
-        return self.grid_width
+        return self.width
 
     def track_shared(self, x, y, axis, direction):
+        """
+        Keep track of shared cables.
+        """
 
         if axis == "x":
             if direction > 0:
@@ -102,6 +105,9 @@ class Grid():
         return self
 
     def remove_shared(self, house):
+        """
+        Remove track of shared cables.
+        """
    
         for i in range(1, len(house.route.list_x)):
     

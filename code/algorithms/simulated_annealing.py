@@ -1,3 +1,4 @@
+from main import SIZE_GRID
 from .greedy import Greedy
 from .randomize import Randomize
 from code.classes.route import Route
@@ -41,7 +42,6 @@ class Simulated_annealing():
 
         # Best result from running algorithm
         old_state = self.optimal_houses()
-        tmp = old_state
     
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
@@ -253,7 +253,7 @@ class Simulated_annealing():
             while True:
                 move = random.randint(-10, 10)
 
-                if house.position_y + move > 0 and house.position_y + move < 50:
+                if house.position_y + move > 0 and house.position_y + move < self.grid.height:
                     break
 
             if move < 0:

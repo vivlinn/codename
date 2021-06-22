@@ -31,8 +31,8 @@ def visualise_grid(grid, number):
     fig, ax = plt.subplots()
 
     # Major ticks every 10, minor ticks every 5
-    major_ticks = np.arange(0, 51, 10)
-    minor_ticks = np.arange(0, 51, 1)
+    major_ticks = np.arange(0, grid.height + 1, 10)
+    minor_ticks = np.arange(0, grid.height + 1, 1)
     ax.set_xticks(major_ticks)
     ax.set_xticks(minor_ticks, minor=True)
     ax.set_yticks(major_ticks)
