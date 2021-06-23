@@ -33,7 +33,7 @@ class Grid():
         directions = ["left", "right", "up", "down"]
 
         for direction in directions:       
-            self.matrix[direction] = np.zeros([11, 11], dtype=int)
+            self.matrix[direction] = np.zeros([self.width + 1, self.height + 1], dtype=int)
         
         return self.matrix
 

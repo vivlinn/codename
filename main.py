@@ -11,7 +11,7 @@ from code.visualisation import visualise, longrun
 
 
 ALGORITHMS = ["RA", "GR", "HC", "SA"]
-SIZE_GRID = 10
+SIZE_GRID = 50
 
 if __name__ == "__main__":
     
