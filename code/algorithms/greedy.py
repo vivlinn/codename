@@ -330,7 +330,7 @@ class Greedy():
 
                     # add cables to matrix
                     self.grid.track_shared((x + horizontal), ( y + vertical), "x", horizontal)
-                    self.gtrack_shared(x, (y + vertical), "y", vertical)
+                    self.grid.track_shared(x, (y + vertical), "y", vertical)
                     return
             # bewegen over de y-as
             else:
