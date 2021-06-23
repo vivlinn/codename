@@ -3,12 +3,12 @@
 
 Green energy is the future of energy, and self-producing is today's fashion. Nowadays, many houses have solar panels, windmills or other sources to produce their own energy. Fortunately, these sources often produce more energy than is necessary for their own consumption. The oversupply could be sold back to the supplier, but the infrastructure (the grid) is often not designed for this. Batteries must be installed to manage peaks in consumption and production.
 
-<img width="326" alt="smartgrid" src="https://user-images.githubusercontent.com/78796677/123080816-9d1d1100-d41d-11eb-8841-02b5fdac35ab.png">
-
 To solve this problem, we will look at three residential areas, each containing 150 houses and 5 batteries. The houses are build with solar panels with a maximum output, while the batteries have a maximum capacity. The challenge is to connect houses with batteries using cables while keeping the costs as low as possible. Furthermore, we must not disregard the following requirements: 
 - Batteries cannot be connected to each other.
 - A house cannot be connected to multiple batteries.
 - The batteries costs 5000 each. The cables cost 9 per grid segment.
+
+![smartgrid2](https://user-images.githubusercontent.com/78796677/123086901-40712480-d424-11eb-8549-855caa204f57.png)
 
 ### Part 1 
 For the first part, each house is connected to a battery through their own unique cable. Multiple cables are allowed to run over the same gridsegments. However, each house will still have their own unique cable, and this will not reduce costs.
@@ -89,7 +89,9 @@ To solve the second part of this case, where shared cables are possible, a secon
 This algorithm is similar to the previous one, but is distinguished by the use of temperature. When iterating, the temperature is decreasing linearly or exponentially. Combined with the difference in total costs between both states, the probability of accepting the best state will be calculated. This allows a state with a worse solution to be accepted. Thereby it is posible to get out of a local optimum. As the temperature reduces over the number of iterations, the algorithm slowly changes to a Hill Climber as described above.
 
 ## Results
-Each algorithm produces results. The results can be viewed in the output folder. 
+Each algorithm produces results. The results can be viewed in the output folder. Here are some examples of the possible results.
+![results](https://user-images.githubusercontent.com/78796677/123086627-ee300380-d423-11eb-9d77-fdfe19bf7021.png)
+
 
 ## Authors
 - Vincent Engelhard

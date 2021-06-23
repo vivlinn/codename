@@ -68,11 +68,10 @@ class Randomize():
 
             # Add route object to the house
             battery_chosen.connected_houses.append(house)
-            house.route = Route(battery_chosen, house.get_x(), house.get_y())
+            house.set_route(battery_chosen, house.get_x(), house.get_y())
 
         return succes, self.grid
-        
-            
+               
     def create_paths(self):
         """
         Creates random paths from house to battery. 
@@ -83,29 +82,31 @@ class Randomize():
 
         for house in self.grid.houses:
 
+            route = house.get_route()
+
             # Save non-chosen batteries in list
             other_batteries = []
             for battery in self.grid.batteries:
-                if battery != house.route.battery:
+                if battery != route.battery:
                     other_batteries.append(battery)
 
 
-            while house.route.battery.get_x()!= house.route.get_last("x") or house.route.battery.get_y() != house.route.get_last("y"):
+            while route.battery.get_x()!= route.get_last("x") or route.battery.get_y() != route.get_last("y"):
 
                 direction = random.choice(['x', 'y'])
 
                 if direction == 'x':
                     direction_x = random.choice([-1, 1])
-                    x = house.route.get_last("x") + direction_x
-                    y = house.route.get_last("y")
+                    x = route.get_last("x") + direction_x
+                    y = route.get_last("y")
                     
                     # Check if x-coordinate is within grid
                     if x >= 0 and x <= self.grid.get_width():
                         
                         # Check if route has started
-                        if len(house.route.list_x) > 1:
+                        if len(route.list_x) > 1:
                             # Set previous coordinate as previous
-                            previous = house.route.list_x[-2]
+                            previous = route.list_x[-2]
                         
                             # Check if new coordinate was not the previous coordinate
                             if previous == x:
@@ -113,6 +114,7 @@ class Randomize():
                                 continue
 
                         valid = True
+
                         # Check if new coordinated don't lead to other batteries
                         for battery in other_batteries:
                             
@@ -122,26 +124,28 @@ class Randomize():
                         
                         if valid == True:
                             # Append new coordinates to route list
-                            house.route.add_cable(x, y)
+                            route.add_cable(x, y)
 
                 else:
                     direction_y = random.choice([-1, 1])
-                    y = house.route.get_last("y") + direction_y
-                    x = house.route.get_last("x")
+                    y = route.get_last("y") + direction_y
+                    x = route.get_last("x")
 
                     if y>= 0 and y <= self.grid.get_height():
 
                         # Check if route has started
-                        if len(house.route.list_y) > 1:
-                            # Set previous cordinate as previous
-                            previous = house.route.list_y[-2]
+                        if len(route.list_y) > 1:
+
+                            previous = route.list_y[-2]
 
                             # Check if new coordinate was not the previous coordinate
                             if previous == y:
+
                                 # Choose new coordinate
                                 continue
 
                         valid = True
+
                         # Check if new coordinated don't lead to other batteries
                         for battery in other_batteries:
                             
@@ -151,5 +155,5 @@ class Randomize():
                         
                         if valid == True:
                             # Append new coordinates to route list
-                            house.route.add_cable(x, y)
+                            route.add_cable(x, y)
         return

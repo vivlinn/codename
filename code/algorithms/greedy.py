@@ -5,9 +5,6 @@ This file contains a greedy algorithm.
 
 """
 
-# Importfiles
-from code.classes.route import Route
-
 
 class Greedy():
     """
@@ -75,7 +72,9 @@ class Greedy():
         """
 
         for house in list_houses:
-            horizontal, vertical = self.define_direction(house)
+            route = house.get_route()
+
+            horizontal, vertical = self.define_direction(route)
 
             self.lay_cables(house, horizontal, vertical)
 
@@ -103,7 +102,7 @@ class Greedy():
                     if house.get_output() <= battery.get_remaining():
                         
                         # Connect house to battery
-                        house.route = Route(battery, house.get_x(), house.get_y())
+                        house.set_route(battery, house.get_x(), house.get_y())
                         battery.add_house(house)
                         
                         # Update remaining capacity
@@ -135,24 +134,24 @@ class Greedy():
                 # Update houses left
                 houses_left.append(house)
 
-                house.check = True
+                house.set_check()
 
                 # Update remainig capacity of battery
                 battery.update_remaining(house, "add")
                 
             return houses_left
 
-    def define_direction(self, house):
+    def define_direction(self, route):
         """
         Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates.
         
-        house: House class
+        route: Route class
 
         Returns: int, int
         """
 
         # If house is further on x-axis than battery: decrease x-coordinate
-        if house.route.get_last("x") >= house.route.battery.get_x():
+        if route.get_last("x") >= route.battery.get_x():
             horizontal = - 1
 
         # Else increase x-coordinate
@@ -160,7 +159,7 @@ class Greedy():
             horizontal = 1
 
         # If house is further on y-axis than battery: decrease y-coordinate
-        if house.route.get_last("y") > house.route.battery.get_y():
+        if route.get_last("y") > route.battery.get_y():
             vertical = -1
 
         # Else increase y-coordinate
@@ -197,7 +196,7 @@ class Greedy():
                 battery_chosen = battery
         
         # Create Route class for house/battery couple
-        house.route = Route(battery_chosen, house.get_x(), house.get_y())
+        house.set_route(battery_chosen, house.get_x(), house.get_y())
 
         battery_chosen.add_house(house)
 
@@ -248,65 +247,67 @@ class Greedy():
         Returns: None
         """
         
+        route = house.get_route()
+
         # Save non-chosen batteries in list
         other_batteries = []
 
         for battery in self.grid.batteries:
 
-            if battery != house.route.battery:
+            if battery != route.battery:
                 other_batteries.append(battery)
     
         # Loop till x-coordinate of cable matches x-coordinate of battery
-        while house.route.get_last("x") != house.route.battery.get_x():
+        while route.get_last("x") != route.battery.get_x():
 
             # When house is not coupled to closest battery
             if house.check:
                 axis = "x"
 
                 # Check if path doesn't cross other batteries
-                self.bypass_battery(house, horizontal, vertical, axis, other_batteries)
+                self.bypass_battery(route, horizontal, vertical, axis, other_batteries)
 
                 # Re-calculate direction from path to battery
-                horizontal, vertical = self.define_direction(house)
+                horizontal, vertical = self.define_direction(route)
             else:
-                x = house.route.get_last("x") + horizontal
-                y = house.route.get_last("y")
+                x = route.get_last("x") + horizontal
+                y = route.get_last("y")
                 
-                house.route.add_cable(x, y)
+                route.add_cable(x, y)
 
                 # Add cables to matrix
                 self.grid.track_shared(x, y, "x", horizontal)
 
         # Loop till y-coordinate of cable matches y-coordinate of battery
-        while house.route.get_last("y") != house.route.battery.get_y():
+        while route.get_last("y") != route.battery.get_y():
             # When house is not coupled to closest battery
             if house.check:
                 axis = "y"
 
                 # Check if path doesn't cross other batteries
-                self.bypass_battery(house, horizontal, vertical, axis, other_batteries)
+                self.bypass_battery(route, horizontal, vertical, axis, other_batteries)
 
                 # Re-calculate direction from path to battery
-                horizontal, vertical = self.define_direction(house)
+                horizontal, vertical = self.define_direction(route)
             else:
-                y = house.route.get_last("y") + vertical
-                x = house.route.get_last("x")
+                y = route.get_last("y") + vertical
+                x = route.get_last("x")
 
-                house.route.add_cable(x, y)
+                route.add_cable(x, y)
                 
                 # Add cables to matrix
                 self.grid.track_shared(x, y, "y", vertical)
 
         # Set checking back to
-        house.check = False
+        house.set_check()
 
         return
 
-    def bypass_battery(self, house, horizontal, vertical, axis, other_batteries):
+    def bypass_battery(self, route, horizontal, vertical, axis, other_batteries):
         """
         bypasses battery if house is relocated and needed
 
-        house: House class; 
+        route: Route class; 
         horizontal: int; 
         vertical: int;
         axis: string
@@ -315,8 +316,8 @@ class Greedy():
         returns: None
         """
 
-        x = house.route.get_last("x")
-        y = house.route.get_last("y")
+        x = route.get_last("x")
+        y = route.get_last("y")
   
         # Check if new coordinated don't lead to other batteries
         for battery in other_batteries:
@@ -331,7 +332,7 @@ class Greedy():
                     x_move = [x, x + horizontal]
                     y_move = [y + vertical, y + vertical]
 
-                    house.route.add_cable(x_move, y_move)
+                    route.add_cable(x_move, y_move)
 
                     # Add cables to matrix
                     self.grid.track_shared((x + horizontal), (y + vertical), "x", horizontal)
@@ -349,7 +350,7 @@ class Greedy():
                     x_move = [x + horizontal, x + horizontal]
                     y_move = [y, y + vertical]
 
-                    house.route.add_cable(x_move, y_move)
+                    route.add_cable(x_move, y_move)
                     
                     # Add cables to matrix
                     self.grid.track_shared((x + horizontal), y, "x", horizontal)
@@ -361,14 +362,14 @@ class Greedy():
         if axis == "x":
             
             # Changes x-coordinate
-            house.route.add_cable(x + horizontal, y)
+            route.add_cable(x + horizontal, y)
     
             # Add cables to matrix
             self.grid.track_shared((x + horizontal), y, "x", horizontal)
         else:
 
             # Changes y-coordinate
-            house.route.add_cable(x, y + vertical)
+            route.add_cable(x, y + vertical)
             
             # Add cables to matrix
             self.grid.track_shared(x, (y + vertical), "y", vertical)

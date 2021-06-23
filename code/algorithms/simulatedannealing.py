@@ -52,6 +52,7 @@ class Simulated_Annealing():
         costs_old = old_state.shared_costs()
         costs_new = new_state.shared_costs()
 
+        # From: Minor Programmeren, Programmeertheorie, Iteratieve Algoritme - Bas Terwijn
         probability = 2 ** ((costs_old - costs_new) / temperature )
 
         if random.random() < probability:

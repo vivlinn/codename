@@ -9,7 +9,6 @@ This file contains a hill climber algorithm.
 from code.algorithms.simulatedannealing import Simulated_Annealing
 from .greedy import Greedy
 from .randomize import Randomize
-from code.classes.route import Route
 
 # Importfunctions
 import copy
@@ -18,7 +17,8 @@ import random
 # Global variable
 SAME_RESULT_STOP = 1000
 SWAP_ROUTE = 1
-
+MINIMUM_TEMP = 0.1
+MOVE_ROUTE = 10
 
 class Hill_Climber():
     """
@@ -90,7 +90,7 @@ class Hill_Climber():
                     return old_state
             
             # Update temperature if needed
-            if self.algorithm_houses == "SA" and self.temperature > 0.1:
+            if self.algorithm_houses == "SA" and self.temperature > MINIMUM_TEMP:
                 simulated = Simulated_Annealing(self.start_temperature, self.iterations)
                 self.temperature = simulated.update_temperature(self.cooling_scheme, i)         
 
@@ -105,7 +105,7 @@ class Hill_Climber():
                     break
 
             # Compare both states and accept best state
-            if self.algorithm_houses == "SA" and self.temperature > 0.1:
+            if self.algorithm_houses == "SA" and self.temperature > MINIMUM_TEMP:
                 old_state, costs = simulated.check(old_state, new_state, self.temperature)
                 self.outcomes.append(costs)
             else:
@@ -145,7 +145,7 @@ class Hill_Climber():
                     return old_state
 
             # Update temperature if needed
-            if self.algorithm_cables == "SA" and self.temperature > 0.1:
+            if self.algorithm_cables == "SA" and self.temperature > MINIMUM_TEMP:
                 simulated = Simulated_Annealing(self.start_temperature, self.iterations)
                 self.temperature = simulated.update_temperature(self.cooling_scheme, i)
 
@@ -153,7 +153,7 @@ class Hill_Climber():
             new_state = self.mutate_cables(old_state)
 
             # Compare both states and accept best state
-            if self.algorithm_cables == "SA" and self.temperature > 0.1:
+            if self.algorithm_cables == "SA" and self.temperature > MINIMUM_TEMP:
                 old_state, costs = simulated.check(old_state, new_state, self.temperature)
                 self.outcomes.append(costs)
             else:
@@ -261,7 +261,7 @@ class Hill_Climber():
 
             # Add route object to the house
             battery_chosen.connected_houses.append(house)
-            house.route = Route(battery_chosen, house.get_x(), house.get_y())
+            house.set_route(battery_chosen, house.get_x(), house.get_y())
 
         # Use greedy to lay cables for all reassigned houses
         greedy = Greedy(new_state)
@@ -291,15 +291,17 @@ class Hill_Climber():
 
             new_state.remove_shared(house)
             
-            house.route.list_x = [house.get_x(), ]
-            house.route.list_y = [house.get_y(), ]
+            route = house.get_route()
+            
+            route.list_x = [house.get_x(), ]
+            route.list_y = [house.get_y(), ]
 
             # Set check at True again
-            house.check = True
+            house.set_check()
 
             # Takes random number if valid
             while True:
-                move = random.randint(-10, 10)
+                move = random.randint(-MOVE_ROUTE, MOVE_ROUTE)
 
                 if house.get_y() + move > 0 and house.get_y() + move < self.grid.height:
                     break
@@ -313,10 +315,10 @@ class Hill_Climber():
             # Appends N new cable coordinates if needed
             if move != 0:
                 for i in range(abs(move)):
-                    house.route.add_cable(house.get_x(), house.route.get_last("y") + tmp)
+                    route.add_cable(house.get_x(), route.get_last("y") + tmp)
 
                     # Adds route to matrices
-                    new_state.track_shared(house.get_x(), house.route.get_last("y"), "y", tmp)
+                    new_state.track_shared(house.get_x(), route.get_last("y"), "y", tmp)
 
         new_state = greedy.create_cables(house_sample)
 
@@ -338,6 +340,7 @@ class Hill_Climber():
         costs_old = old_state.shared_costs()
         costs_new = new_state.shared_costs()
 
+        # From: Minor Programmeren, Programmeertheorie, Iteratieve Algoritme - Bas Terwijn
         probability = 2 ** ((costs_old - costs_new))
 
         if random.random() < probability:

@@ -114,9 +114,6 @@ if __name__ == "__main__":
             total_costs = copy_grid.get_costs()
             shared_costs = copy_grid.shared_costs() 
 
-            print(f"without shared cables costs: {total_costs}")
-            print(f"shared cables costs (mutate cables): {shared_costs}")
-
             iterations = longrun.write_to_file(shared_costs, state)
 
             if shared_costs < lowest_costs:
