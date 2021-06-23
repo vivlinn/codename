@@ -1,3 +1,12 @@
+"""
+Created by CodeName
+
+This file contains the main function. It asks the user for input on iterations, runs and algorithm. 
+Then it runs the algorithm and gets the best state. 
+After this, it prints the costs, and visualizes the state and process of the algorithm.
+"""
+
+# Import packages
 import json
 import copy
 import time
@@ -5,13 +14,16 @@ import time
 from sys import argv
 from os import path
 
+# Importfiles
 from code.algorithms import randomize, greedy, hillclimber, simulatedannealing
 from code.classes import grid
-from code.visualisation import visualise, longrun
+from code.visualisation import visualise as vs
+from code.output import output
 
 
 ALGORITHMS = ["RA", "GR", "HC", "SA"]
 SIZE_GRID = 50
+
 
 if __name__ == "__main__":
     
@@ -96,7 +108,7 @@ if __name__ == "__main__":
             # Copy grid
             copy_grid = copy.deepcopy(grid)
 
-            # call hillclimber algorithm
+            # Call hillclimber algorithm
             state = hillclimber.Hill_Climber(copy_grid, iterations, temperature, cooling_scheme, algorithm_houses, algorithm_cables) 
             
             # Start time
@@ -110,78 +122,42 @@ if __name__ == "__main__":
             # Measure running time, add time of 1 run to total run time
             total_time = total_time + (end - start)
 
-            # costs
+            # Calculate costs
             total_costs = copy_grid.get_costs()
             shared_costs = copy_grid.shared_costs() 
 
-            iterations = longrun.write_to_file(shared_costs, state)
+            iterations = output.write_to_file(shared_costs, state)
 
             if shared_costs < lowest_costs:
                 lowest_costs = shared_costs
             if iterations < quickest_run:
                 quickest_run = iterations
 
-        # Create output
-        final = []
-
-        # Append district name and total costs
-        final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
-
-        # Save file as json
-        final_file = open("output/final.json", "w")
-        json.dump(final, final_file, indent = 6)    
-
-        # Close file
-        final_file.close()
+        # Writes down the best solution in a json-file
+        output.create_final(argv[1], lowest_costs, quickest_run, total_time)
+        
     else:
         total_costs = copy_grid.get_costs()
 
-        
     #------------------------------------------ OUTPUT -----------------------------------------------#
-
-    # Create output
-    output = []
-
-    # Append district name and total costs
-    output.append({"district": argv[1], "costs-shared": total_costs})
-    counter = 1
-
-    # Append attributes for batteries
-    for battery in copy_grid.batteries:
-        output.append({"location": f"{battery.position_x}, {battery.position_y}", "capacity": battery.capacity, "houses": []})
-        
-        # Append attributes for houses
-        for house in battery.connected_houses:
-            cables = []
-
-            # Append coordinates of route
-            for xi, yi in zip(house.route.list_x, house.route.list_y):
-                cables.append(f"{xi}, {yi}")
-            
-            output[counter]["houses"].append({"location": f"{house.position_x}, {house.position_y}", "output": house.max_output, "cables": cables})
-
-    # Save file as json
-    out_file = open("output/output.json", "w")
-    json.dump(output, out_file, indent = 6)    
-
-    # Close file
-    out_file.close()
-
+    
+    # Writes down the solutions in a json-file
+    output.create_output(argv[1], total_costs, copy_grid)
 
     #-------------------------------------------- GET COSTS -------------------------------------------#
 
     total_costs = copy_grid.get_costs()
     shared_costs = copy_grid.shared_costs() 
 
-    print(f"without shared cables costs: {total_costs}")
-    print(f"shared cables costs (mutate cables): {shared_costs}")
-
+    print(f"Total costs of unique cables: {total_costs}")
+    print(f"Total costs of shared cables: {shared_costs}")
 
     #-------------------------------------- VISUALISATION ---------------------------------------------#
+    
+    # Plot grid with created cables
+    vs.visualise_grid(copy_grid, argv[1])
 
-    visualise.visualise_grid(copy_grid, argv[1])
+    if algorithm == "SA" or algorithm == "HC":
 
-    if algorithm == "SA":
-
-        # plot annealing progress
-        visualise.visualise_annealing(state)
+        # Plot annealing progress
+        vs.visualise_annealing(state, algorithm)

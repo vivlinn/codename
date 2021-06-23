@@ -1,9 +1,16 @@
+"""
+Created by CodeName.
+
+This file contains functions to visualise the solution.
+"""
+
+# Import packages
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 
-def visualise_annealing(state):
+def visualise_annealing(state, algorithm):
     """
     This function takes a state and a district number and creates a visualisation plot using the coordinates of objects.
     """
@@ -12,14 +19,21 @@ def visualise_annealing(state):
         
     fig, ax = plt.subplots()
 
-    ax.set_title("Simulated Annealing")
+    if algorithm == "SA":
+        ax.set_title("Simulated Annealing")
+    else:
+        ax.set_title("Hill Climber")
+
     ax.set_xlabel("Iterations")
     ax.set_ylabel("Total costs")
     ax.grid(True)
 
     ax.plot(x, y)
-    plt.savefig(f"output/annealing.png")
 
+    if algorithm == "SA":
+        plt.savefig(f"output/annealing.png")
+    else:
+        plt.savefig(f"output/hillclimber.png")
 
 def visualise_grid(grid, number):
     """

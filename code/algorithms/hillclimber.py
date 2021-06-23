@@ -10,7 +10,7 @@ from code.algorithms.simulatedannealing import Simulated_Annealing
 from .greedy import Greedy
 from .randomize import Randomize
 
-# Importfunctions
+# Import packages
 import copy
 import random
 
@@ -19,6 +19,7 @@ SAME_RESULT_STOP = 1000
 SWAP_ROUTE = 1
 MINIMUM_TEMP = 0.1
 MOVE_ROUTE = 10
+
 
 class Hill_Climber():
     """
@@ -165,7 +166,7 @@ class Hill_Climber():
         """
         Creates a start state using the Randomize class and keeps trying until a state is reached where all houses are coupled to batteries.
 
-        Returns: Grid class.
+        Returns: Grid class
         """
 
         while True:
@@ -196,9 +197,9 @@ class Hill_Climber():
         """
         Adjusts the previous state by swapping 1 house per battery.
 
-        old_state: Grid class.
+        old_state: Grid class
 
-        Returns: list; [Bool, Grid class].
+        Returns: list; [Bool, Grid class]
         """
 
         # Make copy
@@ -273,9 +274,9 @@ class Hill_Climber():
         """
         Adjusts the previous state by changing route of one house.
 
-        old_state: Grid class.
+        old_state: Grid class
 
-        Returns: Grid class.
+        Returns: Grid class
         """
 
         # Make copy

@@ -18,7 +18,7 @@ class House():
 
     def get_x(self):
         """
-        Gets the x position of the house
+        Get the x position of the house.
 
         Returns: int
         """
@@ -27,7 +27,7 @@ class House():
 
     def get_y(self):
         """
-        Gets the y position of the house
+        Get the y position of the house.
 
         Returns: int
         """
@@ -36,7 +36,7 @@ class House():
 
     def get_output(self):
         """
-        Gets the max output of the house
+        Get the max output of the house.
 
         Returns: int 
         """   
@@ -45,7 +45,7 @@ class House():
 
     def get_route(self):
         """
-        gets the route class for the house
+        Get the route class for the house.
 
         Returns: Route class
         """
@@ -54,7 +54,7 @@ class House():
     
     def set_route(self, battery, x, y):
         """
-        Adds a route class to the house
+        Add a route class to the house.
 
         Returns: none
         """
@@ -63,7 +63,7 @@ class House():
 
     def set_check(self):
         """
-        Changes if house needs to be checked
+        Changes if house needs to be checked.
 
         Returns: none
         """

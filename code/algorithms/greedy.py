@@ -24,10 +24,10 @@ class Greedy():
         Returns: Grid class
         """
 
-        # Assigns houses to closest batteries
+        # Assign houses to closest batteries
         self.create_connections()
 
-        # Adds routes from houses to batteries
+        # Add routes from houses to batteries
         self.create_cables(self.grid.houses)
 
         return self.grid
@@ -66,7 +66,7 @@ class Greedy():
         Loops through houses in list. 
         Checks direction towards the coupled battery and lays cables between.
 
-        List_houses: list
+        list_houses: list
 
         Returns: Grid class 
         """
@@ -207,12 +207,12 @@ class Greedy():
 
     def bubbleSort(self, array, object):
         """
-        From: https://www.programiz.com/python-programming/methods/list/sort
+        Credits: https://www.programiz.com/python-programming/methods/list/sort
 
         Sorts a list using bubble sort.
 
-        Array: list
-        Object: str
+        array: list
+        object: str
 
         Returns: list
         """
@@ -305,7 +305,7 @@ class Greedy():
 
     def bypass_battery(self, route, horizontal, vertical, axis, other_batteries):
         """
-        bypasses battery if house is relocated and needed
+        Bypasses battery if house is relocated and needed.
 
         route: Route class; 
         horizontal: int; 

@@ -2,10 +2,12 @@
 Created by CodeName.
 
 This file contains a random algorithm.
-
 """
 
+# Import packages
 import random
+
+# Importfile
 from code.classes.route import Route
 
 
@@ -34,7 +36,7 @@ class Randomize():
     def assign_battery(self):
         """
         Assigns houses to batteries randomly. If succesful for all then creates a route class for each house. 
-        If not succesful; exits function
+        If not succesful; exits function.
 
         Returns: Bool
         """
@@ -75,7 +77,7 @@ class Randomize():
     def create_paths(self):
         """
         Creates random paths from house to battery. 
-        Only checks to stay inside grid and not connect to multiple batteries
+        Only checks to stay inside grid and not connect to multiple batteries.
 
         Returns: None
         """

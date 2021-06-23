@@ -5,13 +5,15 @@ This file contains a Grid class.
 Has a specified size, list of battery classes, list of house classes, and 4 matrices.
 """
 
-
+# Import packages
 import csv
 import numpy as np
 
+# Importfiles
 from .battery import Battery
 from .house import House
 
+# Global variables
 CABLE_PRICE = 9
 BATTERY_PRICE = 5000
 

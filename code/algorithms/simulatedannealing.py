@@ -4,13 +4,15 @@ Created by CodeName
 This file contains a Simulated Annealing class
 """
 
+# Import packages
 import random
+
 
 class Simulated_Annealing():
     """
     Simulated Annealing algorithm.
 
-    Extension on Hill climber with decreasing temperature included in the probability function
+    Extension on Hill climber with decreasing temperature included in the probability function.
     """
 
     def __init__(self, start_temperature, iterations):

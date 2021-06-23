@@ -19,7 +19,7 @@ class Battery():
 
     def get_x(self):
         """
-        Gets the x position of the battery
+        Gets the x position of the battery.
 
         Returns: int
         """
@@ -28,7 +28,7 @@ class Battery():
 
     def get_y(self):
         """
-        Gets the y position of the battery
+        Gets the y position of the battery.
 
         Returns: int
         """

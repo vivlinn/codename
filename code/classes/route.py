@@ -14,7 +14,7 @@ class Route():
 
     def add_cable(self, x, y):
         """
-        Adds x and y coordinate to list of cable points
+        Add x and y coordinate to list of cable points.
 
         x: int / list
         y: int / list
@@ -33,7 +33,7 @@ class Route():
     
     def get_last(self, axis):
         """
-        Gets the last x or y coordinate of the route
+        Get the last x or y coordinate of the route.
 
         axis: str
 
