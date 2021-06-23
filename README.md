@@ -3,7 +3,7 @@
 
 Green energy is the future of energy, and self-producing is today's fashion. Nowadays, many houses have solar panels, windmills or other sources to produce their own energy. Fortunately, these sources often produce more energy than is necessary for their own consumption. The oversupply could be sold back to the supplier, but the infrastructure (the grid) is often not designed for this. Batteries must be installed to manage peaks in consumption and production.
 
-![Configuration of the smart grid](/doc/smartgrid.png)
+<img width="326" alt="smartgrid" src="https://user-images.githubusercontent.com/78796677/123080816-9d1d1100-d41d-11eb-8841-02b5fdac35ab.png">
 
 To solve this problem, we will look at three residential areas, each containing 150 houses and 5 batteries. The houses are build with solar panels with a maximum output, while the batteries have a maximum capacity. The challenge is to connect houses with batteries using cables while keeping the costs as low as possible. Furthermore, we must not disregard the following requirements: 
 - Batteries cannot be connected to each other.
