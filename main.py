@@ -153,7 +153,7 @@ if __name__ == "__main__":
     print(f"Total costs of shared cables: {shared_costs}")
 
     #-------------------------------------- VISUALISATION ---------------------------------------------#
-    
+
     # Plot grid with created cables
     vs.visualise_grid(copy_grid, argv[1])
 
