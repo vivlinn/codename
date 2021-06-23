@@ -28,7 +28,7 @@ Houses can now share the same cable leading to a battery.
 ## Get Started
 
 ### Requirements
-This code is written entirely in Python 3.8.5. The following packages are needed to run the project succesfully.
+This code is written entirely in Python 3.8.5. The following packages and files are needed to run the project succesfully.
 
 ```bash
 python -m pip install -U pip
@@ -36,6 +36,17 @@ python -m pip install -U pip
 
 ```bash
 python -m pip install -U matplotlib
+```
+Use the following instructions to create the empty files.
+
+```bash
+touch output/output.json
+```
+```bash
+touch output/longrun_hill.json
+```
+```bash
+touch output/final_hill.json
 ```
 
 ### Run Project
@@ -56,6 +67,25 @@ The following list describes the main folders and files for this project, and wh
 - **/output**: contains results after running this project.
 
 ## Algorithms
+
+### Random Algorithm
+This algorithm will randomly assign houses to battery, while checking if the battery has enough capacity left. If succeeded, a path of cables will be randomly created between houses and batteries. The paths will never return the way it came from.
+
+**Problems**  
+This algorithm is very inefficient, both for pairing and creating paths. It's also not possible to find a valid solution for all three districts. When running this algorithm, a smaller test district will be used.
+
+### Greedy Algorithm
+This algorithm will assign houses to the nearest battery and paths will be created in the right direction. When assiging the houses, the houses are sorted by max output. Then, if capacity of the batteries are exceeded, five houses will be reassigned and its path recreated.
+
+**Problems**  
+Using this algorithms allows only one way of assiging houses. As a result, this algorithm only results in a valid solution for district 1.
+
+### Hill Climber
+This algorithm creates a random start state using the Random and Greedy algorithms. First it will assign randomly the houses to the batteries, and secondly will create the paths in the right direction.
+
+Subsequently, a number of N iterations are run where in each iteration a mutation is performed. During this mutation, a house from each battery is randomly removed and reassigned. The paths will also be recreated. Then, total costs for both states will be compared. The next iteration starts with the best state.
+
+### Simulated Annealing
 
 **Main**
 

@@ -3,7 +3,6 @@ Created by CodeName.
 
 This file contains a random algorithm.
 
-
 """
 
 import random
@@ -21,9 +20,9 @@ class Randomize():
 
     def run(self):
         """
-        Assigns houses to batteries randomly, then randomly lays a route between them
+        Assigns houses to batteries randomly, then randomly lays a route between them.
 
-        Returns: Grid class
+        Returns: Grid class.
         """
         
         self.assign_battery()
@@ -153,7 +152,7 @@ class Randomize():
                                 valid = False
                         
                         if valid == True:
-                            # append new coordinate to route list
+                            # Append new coordinate to route list
                             house.route.list_x.append(x)
 
                             # Append unchanged y coordinate to route list

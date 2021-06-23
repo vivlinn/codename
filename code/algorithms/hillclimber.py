@@ -5,15 +5,19 @@ This file contains a hill climber algorithm.
 
 """
 
+# Importfiles
 from code.algorithms.simulatedannealing import Simulated_Annealing
 from .greedy import Greedy
 from .randomize import Randomize
 from code.classes.route import Route
 
+# Importfunctions
 import copy
 import random
 
+# Global variable
 SAME_RESULT_STOP = 1000
+
 
 class Hill_Climber():
     """
@@ -23,7 +27,8 @@ class Hill_Climber():
 
     The algorithm rearranges houses over batteries and relays paths.
 
-    Then compares start state with new arranged state and uses an acceptance change to keep the "best" state. Stops after N iterations or N repeated outcomes.
+    Then compares start state with new arranged state and uses an acceptance change to keep the "best" state.
+    Stops after N iterations or N repeated outcomes.
 
     Returns: Grid class
     """
@@ -44,10 +49,10 @@ class Hill_Climber():
         First part optimalises assigning houses to batteries. 
         Second part optimalises shared cables between houses and batteries.
 
-        Returns: Grid class
+        Returns: Grid class.
         """
 
-        # Best result from assigning houses to batteries.
+        # Takes best result assigned houses to batteries
         old_state = self.optimal_houses()
     
         # Best result shared cables
@@ -60,62 +65,11 @@ class Hill_Climber():
         Optimalises assigning houses to battery.
         """
 
-        # Get random start state
+        # Get random valid start state
         old_state = self.start_state()
 
-        # Loop N times
         for i in range(self.iterations):
-            print(i)
-
-            # Start checking after N iterations
-            if i > SAME_RESULT_STOP + 1:
-                counter = 0
-
-                # Check if the last N outcomes are repeated
-                for j in range(1, SAME_RESULT_STOP):
-                    if self.outcomes[-1] == self.outcomes[-(1+j)]:
-                        counter += 1
-                    else:
-                        break      
-
-                # Save state in case the N outcomes are repeated
-                if counter == SAME_RESULT_STOP - 1:
-                    return old_state
-            
-            # Update temperature if needed
-            if self.algorithm_houses == "SA" and self.temperature > 0.1:
-                simulated = Simulated_Annealing(self.start_temperature, self.iterations)
-                self.temperature = simulated.update_temperature(self.cooling_scheme, i)         
-
-            # Make small mutation
-            while True:
-                output = self.mutate(old_state)
-                
-                if output[0] == True:
-                    new_state = output[1]
-                    break
-        
-            # Compare both states and accept best state
-            if self.algorithm_houses == "SA" and self.temperature > 0.1:
-                old_state, costs = simulated.check(old_state, new_state, self.temperature)
-                self.outcomes.append(costs)
-            else:
-                old_state = self.check(old_state, new_state)
-
-        return old_state
-            
-
-    def optimal_cables(self, old_state):
-        """
-        Optimalises shared cables between houses and batteries. Here, the best state from optimal_houses will be used as start state.
-
-        """
-        self.outcomes = [] 
-        
-        # Get best house-state as start state
-
-        for i in range(self.iterations):
-            print(i)
+            print(f"Iteration: {i}")
 
             # Start checking after N iterations
             if i > SAME_RESULT_STOP + 1:
@@ -128,32 +82,83 @@ class Hill_Climber():
                     else:
                         break      
 
-                # Save state in case the N outcomes are repeated
+                # Save state if N outcomes are repeated
+                if counter == SAME_RESULT_STOP - 1:
+                    return old_state
+            
+            # Update temperature if needed
+            if self.algorithm_houses == "SA" and self.temperature > 0.1:
+                simulated = Simulated_Annealing(self.start_temperature, self.iterations)
+                self.temperature = simulated.update_temperature(self.cooling_scheme, i)         
+
+            # Make small mutation
+            while True:
+                output = self.mutate(old_state)
+
+                # if mutation is valid
+                if output[0]:
+                    # save mutation
+                    new_state = output[1]
+                    break
+
+            # Compare both states and accept best state
+            if self.algorithm_houses == "SA" and self.temperature > 0.1:
+                old_state, costs = simulated.check(old_state, new_state, self.temperature)
+                self.outcomes.append(costs)
+            else:
+                old_state = self.check(old_state, new_state)
+
+        return old_state
+
+    def optimal_cables(self, old_state):
+        """
+        Optimalises shared cables between houses and batteries.
+        Here, the best state from optimal_houses will be used as start state.
+
+        """
+        self.outcomes = [] 
+        
+        # Get best house-state as start state
+        for i in range(self.iterations):
+            print(f"Iteration: {i}")
+
+            # Start checking after N iterations
+            if i > SAME_RESULT_STOP + 1:
+                counter = 0
+
+                # Check if last N outcomes are repeated
+                for j in range(1, SAME_RESULT_STOP):
+                    if self.outcomes[-1] == self.outcomes[-(1+j)]:
+                        counter += 1
+                    else:
+                        break      
+
+                # Save state if N outcomes are repeated
                 if counter == SAME_RESULT_STOP - 1:
                     return old_state
 
-            # Change temperature in case
+            # Update temperature if needed
             if self.algorithm_cables == "SA" and self.temperature > 0.1:
                 simulated = Simulated_Annealing(self.start_temperature, self.iterations)
                 self.temperature = simulated.update_temperature(self.cooling_scheme, i)
-                
+
             # Make small mutation
-            new_state = self.mutate_cables(old_state)            
-            
+            new_state = self.mutate_cables(old_state)
+
             # Compare both states and accept best state
             if self.algorithm_cables == "SA" and self.temperature > 0.1:
                 old_state, costs = simulated.check(old_state, new_state, self.temperature)
                 self.outcomes.append(costs)
             else:
                 old_state = self.check(old_state, new_state)
-            
+
         return old_state
 
     def start_state(self):
         """
         Creates a start state using the Randomize class and keeps trying until a state is reached where all houses are coupled to batteries.
 
-        Returns: Grid class
+        Returns: Grid class.
         """
 
         while True:
@@ -184,9 +189,9 @@ class Hill_Climber():
         """
         Adjusts the previous state by swapping 1 house per battery.
 
-        old_state: Grid class 
+        old_state: Grid class.
 
-        Returns: list; [Bool, Grid class]
+        Returns: list; [Bool, Grid class].
         """
 
         # Make copy
@@ -206,7 +211,7 @@ class Hill_Climber():
 
             # Set check at True again
             house.check = True
-
+            
             greedy = Greedy(new_state)
             new_state = new_state.remove_shared(house)
 
@@ -249,7 +254,7 @@ class Hill_Climber():
 
             # Add route object to the house
             battery_chosen.connected_houses.append(house)
-            house.route = Route(battery_chosen, house.position_x, house.position_y)
+            house.route = Route(battery_chosen, house.get_x(), house.get_y())
 
         # Use greedy to lay cables for all reassigned houses
         greedy = Greedy(new_state)
@@ -261,9 +266,9 @@ class Hill_Climber():
         """
         Adjusts the previous state by changing route of one house.
 
-        old_state: Grid class 
+        old_state: Grid class.
 
-        Returns: Grid class
+        Returns: Grid class.
         """
 
         new_state = copy.deepcopy(old_state)

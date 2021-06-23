@@ -41,6 +41,11 @@ class Grid():
     def load_battery(self, file_batteries):
         """
         Load all the batteries into the graph.
+
+        file_batteries: path
+
+        Returns: list
+
         """
 
         batteries = []
@@ -60,6 +65,10 @@ class Grid():
     def load_houses(self, file_houses):
         """
         Load all the houses into the graph.
+
+        file_houses: path
+
+        Returns: list
         """
 
         houses = []
@@ -75,6 +84,8 @@ class Grid():
     def get_height(self):
         """
         Get height of the grid.
+
+        Returns: int
         """
 
         return self.height
@@ -82,6 +93,8 @@ class Grid():
     def get_width(self):
         """
         Get weigth of the grid.
+
+        Returns: int
         """
 
         return self.width
@@ -89,6 +102,14 @@ class Grid():
     def track_shared(self, x, y, axis, direction):
         """
         Keep track of shared cables.
+
+        x: int
+        y: int
+        axis: str
+        direction: str
+
+        Returns: none
+
         """
 
         if axis == "x":
@@ -110,6 +131,10 @@ class Grid():
     def remove_shared(self, house):
         """
         Remove track of shared cables.
+
+        house: House class
+
+        Returns: class
         """
    
         for i in range(1, len(house.route.list_x)):
@@ -135,6 +160,8 @@ class Grid():
     def get_costs(self):
         """
         This function takes a grid and calculates costs of cables and batteries and the total costs.
+
+        Returns: class
         """
 
         total_length = 0
@@ -152,6 +179,8 @@ class Grid():
     def shared_costs(self):
         """
         This function takes a grid and calculates costs of shared cables and batteries and the total costs.
+
+        Returns: int
         """
         total = 0
 

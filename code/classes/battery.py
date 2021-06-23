@@ -17,6 +17,14 @@ class Battery():
         self.position_y = position_y
         self.connected_houses = []
 
+    def get_x(self):
+
+        return self.position_x
+
+    def get_y(self):
+
+        return self.position_y  
+
     def add_house(self, house):
         """
         Connect house to battery.

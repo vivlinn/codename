@@ -21,7 +21,7 @@ if __name__ == "__main__":
         exit(1)
 
 
-    #---------------------------------- SETUP GRID ----------------------------------#
+    #------------------------------------------ SETUP GRID ------------------------------------------#
     
     # Check if folder for district exists
     if not path.exists(f"data/district_{argv[1]}"):
@@ -37,7 +37,9 @@ if __name__ == "__main__":
     # Create grid with houses and batteries
     grid = grid.Grid(SIZE_GRID, file_batteries, file_houses)
 
-    # ------------------------------------ INPUT -----------------------------------#
+
+    # -------------------------------------------- INPUT -------------------------------------------#
+
     information = f"Choose an algorithm: \n- for Random, type RA \n- for Greedy, type GR \n- for Hillclimber, type HC \n- for Simulated Annealing, type SA \n"
     
     while True:
@@ -46,7 +48,9 @@ if __name__ == "__main__":
         if algorithm in ALGORITHMS:
             break
     
-    #------------------------------------- RANDOM ----------------------------------#
+
+    #--------------------------------------------- RANDOM ------------------------------------------#
+
     if algorithm == "RA":
         if argv[1] != "test":
             print("Doesn't work, too slow for 150 houses. Choose test district")
@@ -56,14 +60,15 @@ if __name__ == "__main__":
         copy_grid = state.run()
     
     
-    #------------------------------------- GREEDY ----------------------------------#
+    #--------------------------------------------- GREEDY ------------------------------------------#
+
     if algorithm == "GR":
         
         state = greedy.Greedy(grid)    
         copy_grid = state.run()
     
 
-    #---------------------- HILL CLIMBER / SIMULATED ANNEALING ------------------------#
+    #----------------------------- HILL CLIMBER / SIMULATED ANNEALING ------------------------------#
 
     if algorithm == "HC" or algorithm == "SA":
 
@@ -105,7 +110,7 @@ if __name__ == "__main__":
             # Measure running time, add time of 1 run to total run time
             total_time = total_time + (end - start)
 
-            """--------------------------------- GET COSTS --------------------------------"""
+            # costs
             total_costs = copy_grid.get_costs()
             shared_costs = copy_grid.shared_costs() 
 
@@ -133,8 +138,10 @@ if __name__ == "__main__":
         final_file.close()
     else:
         total_costs = copy_grid.get_costs()
+
         
-    """-----------------------------------OUTPUT----------------------------------------"""
+    #------------------------------------------ OUTPUT -----------------------------------------------#
+
     # Create output
     output = []
 
@@ -164,7 +171,17 @@ if __name__ == "__main__":
     out_file.close()
 
 
-    """--------------------------- VISUALISATION ----------------------------------"""
+    #-------------------------------------------- GET COSTS -------------------------------------------#
+
+    total_costs = copy_grid.get_costs()
+    shared_costs = copy_grid.shared_costs() 
+
+    print(f"without shared cables costs: {total_costs}")
+    print(f"shared cables costs (mutate cables): {shared_costs}")
+
+
+    #-------------------------------------- VISUALISATION ---------------------------------------------#
+
     visualise.visualise_grid(copy_grid, argv[1])
 
     if algorithm == "SA":
