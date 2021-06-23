@@ -5,6 +5,7 @@ This file contains a greedy algorithm.
 
 """
 
+# Importfiles
 from code.classes.route import Route
 
 
@@ -21,13 +22,15 @@ class Greedy():
         Runs the greedy algorithm;
         This function tries to assign the closest battery for every house.
         It then checks if the battery capacity is not exceeded, else assigns another battery to the house.
-        Then adds all route coordinates to a route class for every house
+        Then adds all route coordinates to a route class for every house.
 
         Returns: Grid class
         """
 
+        # Assigns houses to closest batteries
         self.create_connections()
 
+        # Adds routes from houses to batteries
         self.create_cables(self.grid.houses)
 
         return self.grid
@@ -36,7 +39,7 @@ class Greedy():
         """
         Adds all houses to closest battery.
         Then removes excessive houses from batteries if needed.
-        Then adds houses to other battery with capacity left
+        Then adds houses to other battery with capacity left.
 
         Returns: None
         """
@@ -64,7 +67,7 @@ class Greedy():
     def create_cables(self, list_houses):
         """
         Loops through houses in list. 
-        checks direction towards the coupled battery and lays cables between.
+        Checks direction towards the coupled battery and lays cables between.
 
         List_houses: list
 
@@ -80,8 +83,8 @@ class Greedy():
 
     def rearrange_houses(self, houses_left, sorted_batteries):
         """
-        takes all the houses without battery and tries to append them to a battery if possible
-        
+        Takes all the houses without battery and tries to append them to a battery if possible.
+
         houses_left: list
         sorted_batteries: list
 
@@ -94,14 +97,13 @@ class Greedy():
             # Go till battery isn't too full
             for house in houses_left:
             
-                # Iterate over batteries
                 for battery in sorted_batteries:
 
                     # If battery has enough capacity for this house
-                    if house.max_output <= battery.remaining:
+                    if house.get_output() <= battery.get_remaining():
                         
                         # Connect house to battery
-                        house.route = Route(battery, house.position_x, house.position_y)
+                        house.route = Route(battery, house.get_x(), house.get_y())
                         battery.add_house(house)
                         
                         # Update remaining capacity
@@ -109,11 +111,12 @@ class Greedy():
                     
                         # Remove house from list
                         houses_left.remove(house)
-                        break   
+
+                        return   
 
     def remove_excessive_houses(self):
         """
-        unconnects houses from battery and appends these left over houses to a list
+        Unconnects houses from battery and appends these left over houses to a list.
 
         Returns: list
         """
@@ -124,7 +127,7 @@ class Greedy():
         for battery in self.grid.batteries:
                 
             # If battery is full
-            while battery.remaining < 0:
+            while battery.get_remaining() < 0:
 
                 # Remove last house
                 house = battery.remove_house()
@@ -141,11 +144,11 @@ class Greedy():
 
     def define_direction(self, house):
         """
-        Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates
+        Get direction for path for x-axis and y-axis by checking the differnce between house and battery coordinates.
         
         house: House class
 
-        Returns: horizontal: int, vertical: int
+        Returns: int, int
         """
 
         # If house is further on x-axis than battery: decrease x-coordinate
@@ -168,7 +171,7 @@ class Greedy():
 
     def assign_battery(self, house):
         """
-        assigns a battery to a house with the least distance between them
+        Assigns a battery to a house with the least distance between them.
 
         house: House class
 
@@ -194,7 +197,7 @@ class Greedy():
                 battery_chosen = battery
         
         # Create Route class for house/battery couple
-        house.route = Route(battery_chosen, house.position_x, house.position_y)
+        house.route = Route(battery_chosen, house.get_x(), house.get_y())
 
         battery_chosen.add_house(house)
 
@@ -203,17 +206,19 @@ class Greedy():
 
         return
 
-    # https://www.programiz.com/python-programming/methods/list/sort
-    def bubbleSort(self, arr, object):
+    def bubbleSort(self, array, object):
         """
-        sorts a list using bubble sort
+        From: https://www.programiz.com/python-programming/methods/list/sort
 
-        arr: list
+        Sorts a list using bubble sort.
+
+        Array: list
+        Object: str
 
         Returns: list
         """
 
-        n = len(arr)
+        n = len(array)
 
         # Traverse through all array elements
         for i in range(n-1):
@@ -223,19 +228,19 @@ class Greedy():
 
                 # Swap if the element found is greater
                 if object == "house":
-                    if arr[j].max_output < arr[j + 1].max_output:
-                        arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                    if array[j].get_output() < array[j + 1].get_output():
+                        array[j], array[j + 1] = array[j + 1], array[j]
                 else:
-                    if arr[j].remaining > arr[j + 1].remaining:
-                        arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                    if array[j].get_remaining() > array[j + 1].get_remaining():
+                        array[j], array[j + 1] = array[j + 1], array[j]
 
-        return arr
-        
+        return array
 
     def lay_cables(self, house, horizontal, vertical):
         """
         Lays cables from house to battery and adds the coordinates to route class.
         Starts by going horizontal, then vertical until battery is reached.
+
         house: House class; 
         horizontal: int; 
         vertical: int
@@ -275,7 +280,7 @@ class Greedy():
         # Loop till y-coordinate of cable matches y-coordinate of battery
         while house.route.get_last("y") != house.route.battery.get_y():
             # When house is not coupled to closest battery
-            if house.check == True:
+            if house.check:
                 axis = "y"
 
                 # Check if path doesn't cross other batteries

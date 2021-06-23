@@ -17,6 +17,7 @@ import random
 
 # Global variable
 SAME_RESULT_STOP = 1000
+SWAP_ROUTE = 1
 
 
 class Hill_Climber():
@@ -54,15 +55,17 @@ class Hill_Climber():
 
         # Takes best result assigned houses to batteries
         old_state = self.optimal_houses()
-    
+
         # Best result shared cables
         best_state = self.optimal_cables(old_state)
-       
+
         return best_state
 
     def optimal_houses(self):
         """
         Optimalises assigning houses to battery.
+
+        Returns: Grid class
         """
 
         # Get random valid start state
@@ -115,7 +118,11 @@ class Hill_Climber():
         Optimalises shared cables between houses and batteries.
         Here, the best state from optimal_houses will be used as start state.
 
+        old_state: Grid class
+
+        Returns: Grid class
         """
+
         self.outcomes = [] 
         
         # Get best house-state as start state
@@ -173,10 +180,10 @@ class Hill_Climber():
             succes, grid_copy = random.assign_battery()
             
             # If resulting state is valid
-            if succes == True:
+            if succes:
 
                 # Initialize greedy algorithm class
-                greedy= Greedy(grid_copy)
+                greedy = Greedy(grid_copy)
 
                 # Lay cables for all houses in the start state
                 start_state = greedy.create_cables(grid_copy.houses)
@@ -202,7 +209,7 @@ class Hill_Climber():
         new_path = houses_left
 
         for battery in new_state.batteries:
-
+            
             # Shuffle connected houses in random order
             random.shuffle(battery.connected_houses)
 
@@ -216,7 +223,7 @@ class Hill_Climber():
             new_state = new_state.remove_shared(house)
 
             # Update remaining capacity
-            battery.remaining += house.max_output
+            battery.update_remaining(house, "add")
 
             # Add house to houses_left
             houses_left.append(house)
@@ -233,7 +240,7 @@ class Hill_Climber():
                 
                 for battery in new_state.batteries:
                     
-                    if house.max_output <= battery.remaining:
+                    if house.get_output() <= battery.get_remaining():
                         succes = True
 
                         break
@@ -242,14 +249,14 @@ class Hill_Climber():
                 battery_chosen = random.choice(new_state.batteries)
 
                 # Check if battery has capacity for the house
-                if battery_chosen.remaining >= house.max_output:
+                if battery_chosen.get_remaining() >= house.get_output():
 
                     # Update remaining chosen battery capacity
-                    battery_chosen.remaining = battery_chosen.remaining - house.max_output
+                    battery.update_remaining(house, "subtract")
                     
                     break
                 
-                if succes == False:
+                if not succes:
                     return [succes, old_state]
 
             # Add route object to the house
@@ -271,45 +278,49 @@ class Hill_Climber():
         Returns: Grid class.
         """
 
+        # Make copy
         new_state = copy.deepcopy(old_state)
         
-        # MAGIC NUMBER
-        house_sample = random.sample(new_state.houses, 1)
+        # Takes N houses to mutate routes
+        house_sample = random.sample(new_state.houses, SWAP_ROUTE)
         
         greedy = Greedy(new_state)
 
+        # Iterate over houses to mutate route
         for house in house_sample:
-            
+
             new_state.remove_shared(house)
             
-            house.route.list_x = [house.position_x, ]
-            house.route.list_y = [house.position_y, ]
+            house.route.list_x = [house.get_x(), ]
+            house.route.list_y = [house.get_y(), ]
 
             # Set check at True again
             house.check = True
 
+            # Takes random number if valid
             while True:
                 move = random.randint(-10, 10)
 
-                if house.position_y + move > 0 and house.position_y + move < self.grid.height:
+                if house.get_y() + move > 0 and house.get_y() + move < self.grid.height:
                     break
 
+            # Decides direction
             if move < 0:
                 tmp = -1 
             else:
                 tmp = 1
 
+            # Appends N new cable coordinates if needed
             if move != 0:
                 for i in range(abs(move)):
-                    house.route.list_x.append(house.position_x)
-                    house.route.list_y.append(house.route.list_y[-1] + tmp)
-                    
-                    new_state.track_shared(house.position_x, house.route.list_y[-1], "y", tmp)
-        
+                    house.route.add_cable(house.get_x(), house.route.get_last("y") + tmp)
+
+                    # Adds route to matrices
+                    new_state.track_shared(house.get_x(), house.route.get_last("y"), "y", tmp)
+
         new_state = greedy.create_cables(house_sample)
-       
+
         return new_state
-        
 
     def check(self, old_state, new_state):
         """
@@ -323,6 +334,7 @@ class Hill_Climber():
         Returns: Grid class
         """
 
+        # Caculates total costs with shared cables
         costs_old = old_state.shared_costs()
         costs_new = new_state.shared_costs()
 
@@ -331,22 +343,23 @@ class Hill_Climber():
         if random.random() < probability:
             # Accept new state
             self.outcomes.append(costs_new)
+            
             return new_state
         else:
             # Accept old state
             self.outcomes.append(costs_old)
-            return old_state
 
+            return old_state
 
     def plot(self):
         """
-        Gets both the costs of all inbetween states, and a range of 0 to the number of iterations of the algorithm as lists.
+        Gets both the costs of all inbetween states, and a range of 0 to the number of iterations, as lists.
 
-        Returns: list of lists
+        Returns: list, list
         """
 
         y_axis = self.outcomes
         
-        x_axis = range(0,len(self.outcomes))
+        x_axis = range(0, len(self.outcomes))
 
         return x_axis, y_axis

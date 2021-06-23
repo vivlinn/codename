@@ -31,9 +31,16 @@ class Route():
 
         return
     
-    def get_last(self, axis)
+    def get_last(self, axis):
+        """
+        Gets the last x or y coordinate of the route
 
-        if axis == "x"
+        axis: str
+
+        Returns: int
+        """
+
+        if axis == "x":
             return self.list_x[-1]
         
         return self.list_y[-1]

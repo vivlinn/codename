@@ -14,12 +14,29 @@ class House():
         self.route = None
         self.check = False
 
-
     def get_x(self):
+        """
+        Gets the x position of the house
+
+        Returns: int
+        """
 
         return self.position_x
 
     def get_y(self):
+        """
+        Gets the y position of the house
+
+        Returns: int
+        """
 
         return self.position_y
-        
+
+    def get_output(self):
+        """
+        Gets the max output of the house
+
+        Returns: int 
+        """   
+
+        return self.max_output

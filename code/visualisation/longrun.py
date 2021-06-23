@@ -1,4 +1,5 @@
 import json
+from json.decoder import JSONDecodeError
 
 def write_to_file(total_costs, state):
     """
@@ -7,7 +8,12 @@ def write_to_file(total_costs, state):
 
     _, y = state.plot()
     
-    data = json.load(open('output/longrun_hill.json'))
+    with open('output/longrun.json', 'a+') as infile:
+        try:
+            data = json.load(infile)
+        except JSONDecodeError:
+            data = []
+            pass
 
     # Convert data to list if not
     if type(data) is dict:
@@ -19,7 +25,7 @@ def write_to_file(total_costs, state):
     data.append(dictionary)
 
     # Write list to file
-    with open('output/longrun_hill.json', 'w') as outfile:
+    with open('output/longrun.json', 'w') as outfile:
         json.dump(data, outfile)
 
     return len(y)

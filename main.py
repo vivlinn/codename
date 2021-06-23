@@ -131,7 +131,7 @@ if __name__ == "__main__":
         final.append({"district": argv[1], "lowest cost": lowest_costs, "quickest run": quickest_run, "total run time": total_time })
 
         # Save file as json
-        final_file = open("output/final_hill.json", "w")
+        final_file = open("output/final.json", "w")
         json.dump(final, final_file, indent = 6)    
 
         # Close file
