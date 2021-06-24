@@ -70,9 +70,9 @@ class Battery():
         """
 
         if change == "add":
-            self.capacity += house.max_output
+            self.remaining += house.max_output
         else:
-            self.capacity -= house.max_output
+            self.remaining -= house.max_output
 
         return
 
